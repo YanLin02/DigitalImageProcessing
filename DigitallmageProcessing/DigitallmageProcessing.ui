@@ -1,28 +1,118 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DigitallmageProcessingClass</class>
- <widget class="QMainWindow" name="DigitallmageProcessingClass" >
-  <property name="objectName" >
-   <string notr="true">DigitallmageProcessingClass</string>
-  </property>
-  <property name="geometry" >
+ <widget class="QMainWindow" name="DigitallmageProcessingClass">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>400</height>
+    <width>761</width>
+    <height>388</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>DigitallmageProcessing</string>
-  </property>  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>761</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuOpen">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="actionOpenFile"/>
+   </widget>
+   <widget class="QMenu" name="menuOperat">
+    <property name="title">
+     <string>编辑</string>
+    </property>
+    <widget class="QMenu" name="menuGeo">
+     <property name="title">
+      <string>几何变换</string>
+     </property>
+     <addaction name="actionTranslation"/>
+     <addaction name="actionRotate"/>
+     <addaction name="actionScale"/>
+    </widget>
+    <addaction name="menuGeo"/>
+    <addaction name="actionGray"/>
+    <addaction name="actionEnh"/>
+   </widget>
+   <widget class="QMenu" name="menuPerspective">
+    <property name="title">
+     <string>医学透视图像阅览</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuInfo">
+    <property name="title">
+     <string>信息</string>
+    </property>
+   </widget>
+   <addaction name="menuOpen"/>
+   <addaction name="menuOperat"/>
+   <addaction name="menuPerspective"/>
+   <addaction name="menuInfo"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>RightToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpenFile"/>
+   <addaction name="separator"/>
+   <addaction name="actionTranslation"/>
+   <addaction name="actionRotate"/>
+   <addaction name="actionScale"/>
+   <addaction name="separator"/>
+   <addaction name="actionGray"/>
+   <addaction name="separator"/>
+   <addaction name="actionEnh"/>
+   <addaction name="separator"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOpenFile">
+   <property name="text">
+    <string>打开图片</string>
+   </property>
+  </action>
+  <action name="actionGray">
+   <property name="text">
+    <string>灰度变换</string>
+   </property>
+  </action>
+  <action name="actionEnh">
+   <property name="text">
+    <string>图像增强</string>
+   </property>
+  </action>
+  <action name="actionTranslation">
+   <property name="text">
+    <string>平移</string>
+   </property>
+  </action>
+  <action name="actionRotate">
+   <property name="text">
+    <string>旋转</string>
+   </property>
+  </action>
+  <action name="actionScale">
+   <property name="text">
+    <string>缩放</string>
+   </property>
+  </action>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
  <resources>
-   <include location="DigitallmageProcessing.qrc"/>
+  <include location="DigitallmageProcessing.qrc"/>
  </resources>
  <connections/>
-</UI>
+</ui>
