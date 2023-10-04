@@ -13,12 +13,14 @@ DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
 
 	//图像标签创建
 	originalImageLabel = new QLabel(this);
+	processingImageLabel = new QLabel(this);
 	processedImageLabel = new QLabel(this);
 
 	//布局设置
 	QHBoxLayout* Imagelayout = new QHBoxLayout();
 	Imagelayout->setAlignment(Qt::AlignCenter);
 	Imagelayout->addWidget(originalImageLabel);
+	Imagelayout->addWidget(processingImageLabel);
 	Imagelayout->addWidget(processedImageLabel);
 	centralWidget()->setLayout(Imagelayout);
 

@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">
@@ -56,6 +56,8 @@
     <property name="title">
      <string>信息</string>
     </property>
+    <addaction name="action09021230"/>
+    <addaction name="actionAuthor"/>
    </widget>
    <addaction name="menuOpen"/>
    <addaction name="menuOperat"/>
@@ -115,6 +117,16 @@
   <action name="actionFourier">
    <property name="text">
     <string>傅里叶变换</string>
+   </property>
+  </action>
+  <action name="action09021230">
+   <property name="text">
+    <string>09021230</string>
+   </property>
+  </action>
+  <action name="actionAuthor">
+   <property name="text">
+    <string>孙彦林</string>
    </property>
   </action>
  </widget>

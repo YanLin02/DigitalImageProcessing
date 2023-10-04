@@ -36,6 +36,7 @@ private:
     QLabel* labelPath;///< 文件路径标签
 
     QLabel* originalImageLabel;///< 原始图像展示标签
+    QLabel* processingImageLabel;///< 处理中图像展示标签(选用)
     QLabel* processedImageLabel;///< 处理后图像展示标签
     
     Image originalImage;///< 原始图像
