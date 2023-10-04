@@ -1,5 +1,9 @@
 ﻿#include "CVHelper.h"
 
+/// @brief 根据图像的类型，将Mat图像转换为QImage图像
+/// @param mat cv::Mat图像
+/// @return QImage图像
+/// @note 万分感谢 sinat_34774186 的博客，本函数的实现参考了该博客的内容
 QImage CVHelper::cvMat2QImage(const Mat& mat)
 {
 	if (mat.empty())
@@ -141,6 +145,42 @@ QImage CVHelper::cvMat2QImage(const Mat& mat)
 	}
 }
 
+/// @brief 根据图像的类型，将QImage图像转换为Mat图像
+/// @param image QImage图像
+/// @return cv::Mat图像
+/// @note 万分感谢 sinat_34774186 的博客，本函数的实现参考了该博客的内容
+Mat CVHelper::QImage2cvMat(QImage& image){
+	cv::Mat mat;
+	//qDebug() << image.format();
+	switch (image.format())
+	{
+	case QImage::Format_ARGB32:
+		mat = cv::Mat(image.height(), image.width(), CV_8UC4, (void*)image.constBits(), image.bytesPerLine());
+		break;
+	case QImage::Format_RGB32:
+		mat = cv::Mat(image.height(), image.width(), CV_8UC3, (void*)image.constBits(), image.bytesPerLine());
+		//cv::cvtColor(mat, mat, CV_BGR2RGB);
+		break;
+	case QImage::Format_ARGB32_Premultiplied:
+		mat = cv::Mat(image.height(), image.width(), CV_8UC4, (void*)image.constBits(), image.bytesPerLine());
+		break;
+	case QImage::Format_RGB888:
+		mat = cv::Mat(image.height(), image.width(), CV_8UC3, (void*)image.constBits(), image.bytesPerLine());
+		//cv::cvtColor(mat, mat, CV_BGR2RGB);
+		break;
+	case QImage::Format_Indexed8:
+		mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
+		break;
+	case QImage::Format_Grayscale8:
+		mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
+		break;
+	}
+	return mat;
+}
+
+/// @brief 利用OpenCV的函数进行傅里叶变换
+/// @param image QImage图像
+/// @return 傅里叶变换后的QImage图像
 QImage CVHelper::FourierTransform(const QImage& image) {
 	Mat srcImage = toGrayMat(image);
 
