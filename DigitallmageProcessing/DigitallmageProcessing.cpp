@@ -17,6 +17,7 @@ DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
 
 	//布局设置
 	QHBoxLayout* Imagelayout = new QHBoxLayout();
+	Imagelayout->setAlignment(Qt::AlignCenter);
 	Imagelayout->addWidget(originalImageLabel);
 	Imagelayout->addWidget(processedImageLabel);
 	centralWidget()->setLayout(Imagelayout);
@@ -41,18 +42,17 @@ void DigitallmageProcessing::on_actionOpenFile_triggered() {
 	}
 	//状态栏显示路径
 	labelPath->setText(path);
+	//清除原有图像
+	originalImageLabel->clear();
+	processedImageLabel->clear();
 	//显示原始图像
 	originalImage.displayImage(originalImageLabel);
 	//originalImage.displayImage(processedImageLabel);
 }
 
 void DigitallmageProcessing::on_actionGray_triggered() {
-	processedImage.setImage(CVHelper::FourierTransform(originalImage.getQImage()));
-	processedImageLabel->setPixmap(QPixmap::fromImage(processedImage.getQImage()));
-	//processedImage.displayImage(processedImageLabel);
+
 }
-
-
 
 
 void DigitallmageProcessing::on_actionEnh_triggered() {
@@ -72,5 +72,11 @@ void DigitallmageProcessing::on_actionRotate_triggered() {
 
 void DigitallmageProcessing::on_actionScale_triggered() {
 
+}
+
+
+void DigitallmageProcessing::on_actionFourier_triggered(){
+    processedImage.setImage(CVHelper::FourierTransform(originalImage.getQImage()));
+    processedImage.displayImage(processedImageLabel);
 }
 

@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">
@@ -41,6 +41,8 @@
      <addaction name="actionRotate"/>
      <addaction name="actionScale"/>
     </widget>
+    <addaction name="actionFourier"/>
+    <addaction name="separator"/>
     <addaction name="menuGeo"/>
     <addaction name="actionGray"/>
     <addaction name="actionEnh"/>
@@ -77,6 +79,7 @@
    <addaction name="separator"/>
    <addaction name="actionEnh"/>
    <addaction name="separator"/>
+   <addaction name="actionFourier"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpenFile">
@@ -109,10 +112,13 @@
     <string>缩放</string>
    </property>
   </action>
+  <action name="actionFourier">
+   <property name="text">
+    <string>傅里叶变换</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="DigitallmageProcessing.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

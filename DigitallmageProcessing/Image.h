@@ -31,9 +31,10 @@ public:
 
 	/// @brief 向指定标签显示图像
 	/// @param label 用于展示图像的标签
+	/// @attention 展示的时候QImage记得要copy一份，否则转换时会Qt6访问越界！
 	void displayImage(QLabel* label) {
 		label->clear();
-		label->setPixmap(QPixmap::fromImage(this->getQImage()));
+		label->setPixmap(QPixmap::fromImage(this->getQImage()));//忘记copy会导致Qt6访问越界
 		label->adjustSize();
 	}
 

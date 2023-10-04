@@ -182,27 +182,35 @@ Mat CVHelper::QImage2cvMat(QImage& image){
 /// @param image QImage图像
 /// @return 傅里叶变换后的QImage图像
 QImage CVHelper::FourierTransform(const QImage& image) {
+	//转化为灰度图
 	Mat srcImage = toGrayMat(image);
-
+	
+	//扩展图像
 	int m = getOptimalDFTSize(srcImage.rows);
 	int n = getOptimalDFTSize(srcImage.cols);
 
 	Mat padded;
 	copyMakeBorder(srcImage, padded, 0, m - srcImage.rows, 0, n - srcImage.cols, BORDER_CONSTANT, Scalar::all(0));
-
+	
+	//傅里叶变换分配空间
+	//多加一个额外通道来存储复数部分
 	Mat planes[] = { Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F) };
 	Mat complexI;
 	merge(planes, 2, complexI);
 
+	//进行傅里叶变换
 	dft(complexI, complexI);
 
+	//分离通道
 	split(complexI, planes);
 	magnitude(planes[0], planes[1], planes[0]);
 	Mat magI = planes[0];
 
+	//用对数尺度来替换线性尺度
 	magI += Scalar::all(1);
 	log(magI, magI);
 
+	//剪切和重分布幅度图象限
 	magI = magI(Rect(0, 0, magI.cols & -2, magI.rows & -2));
 
 	int cx = magI.cols / 2;
@@ -222,6 +230,7 @@ QImage CVHelper::FourierTransform(const QImage& image) {
 	q2.copyTo(q1);
 	tmp.copyTo(q2);
 
+	//归一化
 	normalize(magI, magI, 0, 1, NORM_MINMAX);
 
 	//imshow("Input Image", srcImage);

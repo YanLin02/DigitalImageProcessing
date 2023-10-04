@@ -27,6 +27,8 @@ private slots:
     void on_actionRotate_triggered();
     /// @brief 缩放
     void on_actionScale_triggered();
+    /// @brief 傅里叶变换
+    void on_actionFourier_triggered();
     
 private:
     Ui::DigitallmageProcessingClass ui;///< UI
