@@ -29,7 +29,9 @@ private slots:
     void on_actionScale_triggered();
     
 private:
-    Ui::DigitallmageProcessingClass ui;
+    Ui::DigitallmageProcessingClass ui;///< UI
+
+    QLabel* labelPath;///< 文件路径标签
 
     QLabel* originalImageLabel;///< 原始图像展示标签
     QLabel* processedImageLabel;///< 处理后图像展示标签

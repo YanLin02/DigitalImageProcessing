@@ -3,6 +3,8 @@
 #include <qfiledialog.h>
 #include <qmessagebox.h>
 #include <QHBoxLayout>
+#include <qpixmap.h>
+#include "CVHelper.h"
 
 
 DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
@@ -20,8 +22,8 @@ DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
 	centralWidget()->setLayout(Imagelayout);
 
 	//状态栏显示路径
-	QLabel* labelPath = new QLabel("图片路径", this);
-	statusBar()->addWidget(labelPath);
+	this->labelPath = new QLabel("图片路径", this);
+	statusBar()->addWidget(this->labelPath);
 
 }
 
@@ -33,29 +35,21 @@ void DigitallmageProcessing::on_actionOpenFile_triggered() {
 		QMessageBox::warning(this, "警告", "未选择路径");
 		return;
 	}
-
 	if (!originalImage.loadImage(path)) {//打开文件失败
 		QMessageBox::warning(this, "警告", "打开文件失败");
 		return;
 	}
-
+	//状态栏显示路径
+	labelPath->setText(path);
 	//显示原始图像
 	originalImage.displayImage(originalImageLabel);
-
-	//傅里叶变换
-	//processedImage = originalImage.FourierTransform();
-
-	//显示处理后图像
-	originalImage.displayImage(processedImageLabel);
-
-	//状态栏显示路径
-	QLabel* labelPath = statusBar()->findChild<QLabel*>();
-	labelPath->setText(path);
-
+	//originalImage.displayImage(processedImageLabel);
 }
 
 void DigitallmageProcessing::on_actionGray_triggered() {
-
+	processedImage.setImage(CVHelper::FourierTransform(originalImage.getQImage()));
+	processedImageLabel->setPixmap(QPixmap::fromImage(processedImage.getQImage()));
+	//processedImage.displayImage(processedImageLabel);
 }
 
 
