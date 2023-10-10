@@ -4,6 +4,7 @@
 #include <qlabel.h>
 
 #include "ui_DigitallmageProcessing.h"
+#include "numericselection.h"
 #include "Image.h"
 
 class DigitallmageProcessing : public QMainWindow
@@ -29,10 +30,16 @@ private slots:
     void on_actionScale_triggered();
     /// @brief 傅里叶变换
     void on_actionFourier_triggered();
-    
+    /// @brief 直方图
     void on_actionShowHistogram_triggered();
-    
+    /// @brief 直方图均衡化
     void on_actionEqualization_triggered();
+    
+    void on_actionCleanImage_triggered();
+    
+    void on_actionCLAHE_triggered();
+    //TODO 增加一个按钮使得输出可以保存、转化为输入
+    //TODO 增加关闭按键
     
 private:
     Ui::DigitallmageProcessingClass ui;///< UI
@@ -46,6 +53,8 @@ private:
     Image originalImage;///< 原始图像
     Image processingImage;///< 处理中图像(选用)
     Image processedImage;///< 处理后图像
+
+    bool hasImage;///< 是否已经导入图像
 
     void cleanLabelImage();///< 清除图像标签
 };

@@ -53,4 +53,7 @@ public:
 		this->image = image;
 	}
 
+	void Scale(double scale) {
+		image = image.scaled(image.width() * scale, image.height() * scale);
+	}
 };

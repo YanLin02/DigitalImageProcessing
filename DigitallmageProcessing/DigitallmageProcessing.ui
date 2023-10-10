@@ -47,6 +47,7 @@
      </property>
      <addaction name="actionShowHistogram"/>
      <addaction name="actionEqualization"/>
+     <addaction name="actionCLAHE"/>
     </widget>
     <addaction name="menu"/>
     <addaction name="actionFourier"/>
@@ -54,6 +55,7 @@
     <addaction name="menuGeo"/>
     <addaction name="actionGray"/>
     <addaction name="actionEnh"/>
+    <addaction name="actionCleanImage"/>
    </widget>
    <widget class="QMenu" name="menuPerspective">
     <property name="title">
@@ -80,6 +82,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpenFile"/>
+   <addaction name="actionCleanImage"/>
    <addaction name="separator"/>
    <addaction name="actionTranslation"/>
    <addaction name="actionRotate"/>
@@ -93,6 +96,7 @@
    <addaction name="separator"/>
    <addaction name="actionShowHistogram"/>
    <addaction name="actionEqualization"/>
+   <addaction name="actionCLAHE"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpenFile">
@@ -148,6 +152,16 @@
   <action name="actionEqualization">
    <property name="text">
     <string>直方图均衡化</string>
+   </property>
+  </action>
+  <action name="actionCleanImage">
+   <property name="text">
+    <string>清除过程图像</string>
+   </property>
+  </action>
+  <action name="actionCLAHE">
+   <property name="text">
+    <string>CLAHE</string>
    </property>
   </action>
  </widget>

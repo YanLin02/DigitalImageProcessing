@@ -19,8 +19,12 @@ public:
 	static QImage FourierTransform(const QImage& image);
 
 	static QImage Histogram(const QImage& image);
+	static QImage myHistogram(const QImage& image);
 
 	static QImage HistogramEqualization(const QImage& image);
+	static QImage myHistogramEqualization(const QImage& image);
+
+	static QImage CLAHETran(const QImage& image, double ClipLimit = 40.0, int TilesGridSize = 8);
 
 	static QImage cvMat2QImage(const Mat& mat);
 

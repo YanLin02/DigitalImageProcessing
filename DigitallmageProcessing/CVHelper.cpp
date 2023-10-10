@@ -149,7 +149,7 @@ QImage CVHelper::cvMat2QImage(const Mat& mat)
 /// @param image QImage图像
 /// @return cv::Mat图像
 /// @note 万分感谢 sinat_34774186 的博客，本函数的实现参考了该博客的内容
-Mat CVHelper::QImage2cvMat(QImage& image){
+Mat CVHelper::QImage2cvMat(QImage& image) {
 	cv::Mat mat;
 	//qDebug() << image.format();
 	switch (image.format())
@@ -184,14 +184,14 @@ Mat CVHelper::QImage2cvMat(QImage& image){
 QImage CVHelper::FourierTransform(const QImage& image) {
 	//转化为灰度图
 	Mat srcImage = toGrayMat(image);
-	
+
 	//扩展图像
 	int m = getOptimalDFTSize(srcImage.rows);
 	int n = getOptimalDFTSize(srcImage.cols);
 
 	Mat padded;
 	copyMakeBorder(srcImage, padded, 0, m - srcImage.rows, 0, n - srcImage.cols, BORDER_CONSTANT, Scalar::all(0));
-	
+
 	//傅里叶变换分配空间
 	//多加一个额外通道来存储复数部分
 	Mat planes[] = { Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F) };
@@ -245,25 +245,55 @@ QImage CVHelper::Histogram(const QImage& image)
 	//转化为灰度图
 	Mat srcImage = toGrayMat(image);
 
-	//计算图像直方图
+	//计算图像直方图数组
 	int histsize = 256;//直方图等级
 	float ranges[] = { 0,256 };//灰度级范围
 	const float* histRanges = { ranges };
-	Mat HistImage;
-	calcHist(&srcImage, 1, 0, Mat(), HistImage, 1, &histsize, &histRanges, true, false);//计算直方图
+	Mat HistNum;//容纳直方图数组
+	calcHist(&srcImage, 1, 0, Mat(), HistNum, 1, &histsize, &histRanges, true, false);//计算直方图
 
-	//创建直方图显示图像
-	int hist_h = 300;//直方图的图像的高
-	int hist_w = 512; //直方图的图像的宽
-	int bin_w = hist_w / histsize;//直方图的等级
-	normalize(HistImage, HistImage, 0, hist_h, NORM_MINMAX, -1, Mat());//归一化
+	//通过数组创建直方图显示图像
+	int hist_h = image.height();
+	int hist_w = image.width();
+	//TODO 宽度和高度自定义功能
+	int bin_w = cvRound((double)hist_w / histsize);//单位宽度
+	normalize(HistNum, HistNum, 0, hist_h, NORM_MINMAX, -1, Mat());//归一化
 
 	//绘制并显示直方图
 	Mat output(hist_h, hist_w, CV_8UC3, Scalar(240, 240, 240));//灰色背景
 	for (int i = 1; i < histsize; i++)//绘制直方曲线
-		line(output, Point((i - 1) * bin_w, hist_h - cvRound(HistImage.at<float>(i - 1))),
-						Point((i)*bin_w, hist_h - cvRound(HistImage.at<float>(i))), 
-						Scalar(0, 0, 0), 2, 8, 0);//白色，线宽为2，8连通性，无法抗锯齿
+		line(output,
+			Point((i - 1) * bin_w, hist_h - cvRound(HistNum.at<float>(i - 1))),
+			Point((i)*bin_w, hist_h - cvRound(HistNum.at<float>(i))),
+			Scalar(0, 0, 0), 2, 8, 0);//白色，线宽为2，连通性8
+
+	return cvMat2QImage(output);
+}
+
+QImage CVHelper::myHistogram(const QImage& image)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+
+	//统计各个灰度级的像素个数
+	int hist[256] = { 0 };
+	for (int i = 0; i < srcImage.cols * srcImage.rows; i++)
+		hist[srcImage.data[i]]++;
+
+	//这里，x轴取个近似不归一了
+	int n = srcImage.cols / 256;//每个灰度级的宽度
+
+	Mat output(srcImage.rows, 256 * n, CV_8UC1, Scalar(0));
+	int max = 0;
+	for (int i = 0; i < 256; i++)
+		if (hist[i] > max)
+			max = hist[i];
+
+	for (int i = 0; i < 256; i++) {
+		int normalization = (double)hist[i] * srcImage.rows / max;//每次都要将数组的值根据最大值归一化
+		for (int j = 0; j < n; j++)
+			line(output, Point(n * i + j, output.rows - 1), Point(n * i + j, output.rows - 1 - normalization), Scalar(255, 255, 255));
+	}
 
 	return cvMat2QImage(output);
 }
@@ -272,6 +302,57 @@ QImage CVHelper::HistogramEqualization(const QImage& image)
 {
 	Mat output;
 	equalizeHist(toGrayMat(image), output);
+	return cvMat2QImage(output);
+}
+
+QImage CVHelper::myHistogramEqualization(const QImage& image)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+
+	//统计各个灰度级的像素个数
+	int hist[256] = { 0 };
+	for (int i = 0; i < srcImage.cols * srcImage.rows; i++)
+		hist[srcImage.data[i]]++;
+
+
+	//计算方式：255 * 累计概率
+
+	int grayMap[256] = { 0 };//灰度映射表
+	int SumOfProbability = 0;//累计概率
+	for (int i = 0; i < 256; i++) {
+		SumOfProbability += hist[i];
+		grayMap[i] = (double)SumOfProbability / (srcImage.rows * srcImage.cols) * 255;
+	}
+
+	Mat output(srcImage.rows, srcImage.cols, CV_8UC1, Scalar(0));
+	for (int i = 0; i < srcImage.rows * srcImage.cols; i++)
+		output.data[i] = grayMap[srcImage.data[i]];//对每个像素点进行灰度映射
+
+	return cvMat2QImage(output);
+}
+
+/// @brief CLAHE算法对图像的局部区域应用直方图均衡化来增强图像的对比度。
+/// @param image 原始图像
+/// @param ClipLimit 对比度限制阈值，默认为 40.0
+/// @param TilesGridSize 区块尺寸，默认为 8x8
+/// @return 处理后的图像
+/// @note 避免了全局直方图均衡化可能引起的过度增强和噪点的问题
+/// @note 将图像分成多个区块，并在每个区块内进行直方图均衡化，限制对比度的增强在每个区块中进行。
+/// @note 由于每个区块的直方图都是局部的，这种方法对图像中不同区域的对比度变化有很好的效果。
+/// @note 对比度限制阈值 拉高会增加图像细节，同时会增大噪声的影响
+/// @note 区块尺寸 拉高会导致整体效果更加平滑，可能导致细节的丢失。
+/// @note 膝盖图像设置 4 / 6 结果较好
+QImage CVHelper::CLAHETran(const QImage& image, double ClipLimit, int TilesGridSize)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+	Mat output;
+	Ptr<CLAHE> clahe = createCLAHE();
+	clahe->setClipLimit(ClipLimit);  // 对比度限制阈值，默认为 40.0
+	clahe->setTilesGridSize(Size(TilesGridSize, TilesGridSize));  // 区块尺寸，默认为 8x8
+	clahe->apply(srcImage, output);
+
 	return cvMat2QImage(output);
 }
 

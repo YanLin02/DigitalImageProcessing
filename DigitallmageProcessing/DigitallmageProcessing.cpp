@@ -5,11 +5,13 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <qpixmap.h>
+#include <qdialog.h>
+#include <qdebug.h>
 #include "CVHelper.h"
 
 
 DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
-	: QMainWindow(parent) {
+	: QMainWindow(parent), hasImage(false) {
 	ui.setupUi(this);
 
 	//图像标签创建
@@ -53,61 +55,130 @@ void DigitallmageProcessing::on_actionOpenFile_triggered() {
 	processedImageLabel->clear();
 	//显示原始图像
 	originalImage.displayImage(originalImageLabel);
+
+	hasImage = true;
 }
 
 void DigitallmageProcessing::on_actionGray_triggered() {
-
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
 }
 
 
 void DigitallmageProcessing::on_actionEnh_triggered() {
-
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
 }
 
 
 void DigitallmageProcessing::on_actionTranslation_triggered() {
-
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
 }
 
 
 void DigitallmageProcessing::on_actionRotate_triggered() {
-
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
 }
 
 
 void DigitallmageProcessing::on_actionScale_triggered() {
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	//获取倍率
+	int vlaue = 100;
+	NumericSelection* numericSelection = new NumericSelection("缩放倍率");
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {vlaue = v; });
+	numericSelection->exec();
+
 
 }
 
 
 void DigitallmageProcessing::on_actionFourier_triggered() {
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
 	cleanLabelImage();
 	processedImage.setImage(CVHelper::FourierTransform(originalImage.getQImage()));
 	processedImage.displayImage(processedImageLabel);
 }
 
 
-void DigitallmageProcessing::on_actionShowHistogram_triggered()
-{
+void DigitallmageProcessing::on_actionShowHistogram_triggered() {
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
 	cleanLabelImage();
-	processedImage.setImage(CVHelper::Histogram(originalImage.getQImage()));
+	processedImage.setImage(CVHelper::myHistogram(originalImage.getQImage()));
 	processedImage.displayImage(processedImageLabel);
 }
 
 
-void DigitallmageProcessing::on_actionEqualization_triggered()
-{
+void DigitallmageProcessing::on_actionEqualization_triggered() {
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
 	cleanLabelImage();
-	processedImage.setImage(CVHelper::HistogramEqualization(originalImage.getQImage()));//均衡化
+	processedImage.setImage(CVHelper::myHistogramEqualization(originalImage.getQImage()));//均衡化
 	processedImage.displayImage(processedImageLabel);
 
-	processingImage.setImage(CVHelper::Histogram(processedImage.getQImage()));//均衡化后的直方图
+	processingImage.setImage(CVHelper::myHistogram(processedImage.getQImage()));//均衡化后的直方图
 	processingImage.displayImage(processingImageLabel);
 }
 
-void DigitallmageProcessing::cleanLabelImage()
-{
+void DigitallmageProcessing::cleanLabelImage() {
 	processingImageLabel->clear();
 	processedImageLabel->clear();
+}
+
+
+void DigitallmageProcessing::on_actionCleanImage_triggered() {
+	this->cleanLabelImage();
+}
+
+
+void DigitallmageProcessing::on_actionCLAHE_triggered() {
+	if (!hasImage) {//没有导入图片无效
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+	//cleanLabelImage();
+
+
+	//获取对比度限制阈值
+	int ClipLimit = 40;
+	NumericSelection* numericSelection = new NumericSelection("对比度限制阈值");
+	numericSelection->setValue(40);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ClipLimit = v; });
+	numericSelection->exec();
+
+	//获取网格大小
+	int TilesGridSize = 8;
+	NumericSelection* numericSelection2 = new NumericSelection("网格大小");
+	numericSelection2->setValue(8);
+	connect(numericSelection2, &NumericSelection::offerValue, this, [&TilesGridSize](int v) {TilesGridSize = v; });
+	numericSelection2->exec();
+
+	processedImage.setImage(CVHelper::CLAHETran(originalImage.getQImage(), ClipLimit, TilesGridSize));
+	processedImage.displayImage(processedImageLabel);
+
+	processingImage.setImage(CVHelper::myHistogram(processedImage.getQImage()));//CLAHE后的直方图
+	processingImage.displayImage(processingImageLabel);
 }
 

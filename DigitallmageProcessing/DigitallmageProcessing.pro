@@ -14,8 +14,11 @@ MOC_DIR += GeneratedFiles/$(ConfigurationName)
 OBJECTS_DIR += debug
 UI_DIR += GeneratedFiles
 RCC_DIR += GeneratedFiles
-HEADERS += ./DigitallmageProcessing.h
+HEADERS += ./DigitallmageProcessing.h \
+	numericselection.h
 SOURCES += ./DigitallmageProcessing.cpp \
-    ./main.cpp
-FORMS += ./DigitallmageProcessing.ui
+    ./main.cpp \
+    numericselection.cpp
+FORMS += ./DigitallmageProcessing.ui \
+	numericselection.ui
 RESOURCES += DigitallmageProcessing.qrc
