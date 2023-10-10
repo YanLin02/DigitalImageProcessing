@@ -185,16 +185,14 @@ QImage CVHelper::FourierTransform(const QImage& image) {
 	//转化为灰度图
 	Mat srcImage = toGrayMat(image);
 
-	//扩展图像
-	int m = getOptimalDFTSize(srcImage.rows);
-	int n = getOptimalDFTSize(srcImage.cols);
-
-	Mat padded;
-	copyMakeBorder(srcImage, padded, 0, m - srcImage.rows, 0, n - srcImage.cols, BORDER_CONSTANT, Scalar::all(0));
+	//扩展图像（选）
+	//int m = getOptimalDFTSize(srcImage.rows);
+	//int n = getOptimalDFTSize(srcImage.cols);
+	//copyMakeBorder(srcImage, srcImage, 0, m - srcImage.rows, 0, n - srcImage.cols, BORDER_CONSTANT, Scalar::all(0));
 
 	//傅里叶变换分配空间
 	//多加一个额外通道来存储复数部分
-	Mat planes[] = { Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F) };
+	Mat planes[] = { Mat_<float>(srcImage), Mat::zeros(srcImage.size(), CV_32F) };
 	Mat complexI;
 	merge(planes, 2, complexI);
 
