@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">
@@ -41,6 +41,14 @@
      <addaction name="actionRotate"/>
      <addaction name="actionScale"/>
     </widget>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>直方图操作</string>
+     </property>
+     <addaction name="actionShowHistogram"/>
+     <addaction name="actionEqualization"/>
+    </widget>
+    <addaction name="menu"/>
     <addaction name="actionFourier"/>
     <addaction name="separator"/>
     <addaction name="menuGeo"/>
@@ -82,6 +90,9 @@
    <addaction name="actionEnh"/>
    <addaction name="separator"/>
    <addaction name="actionFourier"/>
+   <addaction name="separator"/>
+   <addaction name="actionShowHistogram"/>
+   <addaction name="actionEqualization"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpenFile">
@@ -127,6 +138,16 @@
   <action name="actionAuthor">
    <property name="text">
     <string>孙彦林</string>
+   </property>
+  </action>
+  <action name="actionShowHistogram">
+   <property name="text">
+    <string>显示直方图</string>
+   </property>
+  </action>
+  <action name="actionEqualization">
+   <property name="text">
+    <string>直方图均衡化</string>
    </property>
   </action>
  </widget>

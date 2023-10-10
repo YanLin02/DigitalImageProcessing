@@ -240,4 +240,39 @@ QImage CVHelper::FourierTransform(const QImage& image) {
 	return cvMat2QImage(magI);
 }
 
+QImage CVHelper::Histogram(const QImage& image)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+
+	//计算图像直方图
+	int histsize = 256;//直方图等级
+	float ranges[] = { 0,256 };//灰度级范围
+	const float* histRanges = { ranges };
+	Mat HistImage;
+	calcHist(&srcImage, 1, 0, Mat(), HistImage, 1, &histsize, &histRanges, true, false);//计算直方图
+
+	//创建直方图显示图像
+	int hist_h = 300;//直方图的图像的高
+	int hist_w = 512; //直方图的图像的宽
+	int bin_w = hist_w / histsize;//直方图的等级
+	normalize(HistImage, HistImage, 0, hist_h, NORM_MINMAX, -1, Mat());//归一化
+
+	//绘制并显示直方图
+	Mat output(hist_h, hist_w, CV_8UC3, Scalar(240, 240, 240));//灰色背景
+	for (int i = 1; i < histsize; i++)//绘制直方曲线
+		line(output, Point((i - 1) * bin_w, hist_h - cvRound(HistImage.at<float>(i - 1))),
+						Point((i)*bin_w, hist_h - cvRound(HistImage.at<float>(i))), 
+						Scalar(0, 0, 0), 2, 8, 0);//白色，线宽为2，8连通性，无法抗锯齿
+
+	return cvMat2QImage(output);
+}
+
+QImage CVHelper::HistogramEqualization(const QImage& image)
+{
+	Mat output;
+	equalizeHist(toGrayMat(image), output);
+	return cvMat2QImage(output);
+}
+
 

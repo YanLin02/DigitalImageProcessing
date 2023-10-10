@@ -30,6 +30,10 @@ private slots:
     /// @brief 傅里叶变换
     void on_actionFourier_triggered();
     
+    void on_actionShowHistogram_triggered();
+    
+    void on_actionEqualization_triggered();
+    
 private:
     Ui::DigitallmageProcessingClass ui;///< UI
 
@@ -40,5 +44,8 @@ private:
     QLabel* processedImageLabel;///< 处理后图像展示标签
     
     Image originalImage;///< 原始图像
+    Image processingImage;///< 处理中图像(选用)
     Image processedImage;///< 处理后图像
+
+    void cleanLabelImage();///< 清除图像标签
 };

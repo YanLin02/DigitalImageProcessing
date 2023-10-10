@@ -18,6 +18,10 @@ class CVHelper
 public:
 	static QImage FourierTransform(const QImage& image);
 
+	static QImage Histogram(const QImage& image);
+
+	static QImage HistogramEqualization(const QImage& image);
+
 	static QImage cvMat2QImage(const Mat& mat);
 
 	static Mat QImage2cvMat(QImage& image);

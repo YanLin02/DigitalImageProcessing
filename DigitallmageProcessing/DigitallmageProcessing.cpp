@@ -3,6 +3,7 @@
 #include <qfiledialog.h>
 #include <qmessagebox.h>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <qpixmap.h>
 #include "CVHelper.h"
 
@@ -17,6 +18,8 @@ DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
 	processedImageLabel = new QLabel(this);
 
 	//布局设置
+
+
 	QHBoxLayout* Imagelayout = new QHBoxLayout();
 	Imagelayout->setAlignment(Qt::AlignCenter);
 	Imagelayout->addWidget(originalImageLabel);
@@ -46,10 +49,10 @@ void DigitallmageProcessing::on_actionOpenFile_triggered() {
 	labelPath->setText(path);
 	//清除原有图像
 	originalImageLabel->clear();
+	processingImageLabel->clear();
 	processedImageLabel->clear();
 	//显示原始图像
 	originalImage.displayImage(originalImageLabel);
-	//originalImage.displayImage(processedImageLabel);
 }
 
 void DigitallmageProcessing::on_actionGray_triggered() {
@@ -77,8 +80,34 @@ void DigitallmageProcessing::on_actionScale_triggered() {
 }
 
 
-void DigitallmageProcessing::on_actionFourier_triggered(){
-    processedImage.setImage(CVHelper::FourierTransform(originalImage.getQImage()));
-    processedImage.displayImage(processedImageLabel);
+void DigitallmageProcessing::on_actionFourier_triggered() {
+	cleanLabelImage();
+	processedImage.setImage(CVHelper::FourierTransform(originalImage.getQImage()));
+	processedImage.displayImage(processedImageLabel);
+}
+
+
+void DigitallmageProcessing::on_actionShowHistogram_triggered()
+{
+	cleanLabelImage();
+	processedImage.setImage(CVHelper::Histogram(originalImage.getQImage()));
+	processedImage.displayImage(processedImageLabel);
+}
+
+
+void DigitallmageProcessing::on_actionEqualization_triggered()
+{
+	cleanLabelImage();
+	processedImage.setImage(CVHelper::HistogramEqualization(originalImage.getQImage()));//均衡化
+	processedImage.displayImage(processedImageLabel);
+
+	processingImage.setImage(CVHelper::Histogram(processedImage.getQImage()));//均衡化后的直方图
+	processingImage.displayImage(processingImageLabel);
+}
+
+void DigitallmageProcessing::cleanLabelImage()
+{
+	processingImageLabel->clear();
+	processedImageLabel->clear();
 }
 
