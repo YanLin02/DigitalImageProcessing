@@ -53,6 +53,9 @@ public:
 		this->image = image;
 	}
 
+	/// @brief 简易缩放
+	/// @param scale 尺度
+	/// @debug 未测试
 	void Scale(double scale) {
 		image = image.scaled(image.width() * scale, image.height() * scale);
 	}

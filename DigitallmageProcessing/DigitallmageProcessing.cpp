@@ -142,6 +142,7 @@ void DigitallmageProcessing::on_actionEqualization_triggered() {
 	processingImage.displayImage(processingImageLabel);
 }
 
+
 void DigitallmageProcessing::cleanLabelImage() {
 	processingImageLabel->clear();
 	processedImageLabel->clear();

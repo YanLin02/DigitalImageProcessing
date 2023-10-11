@@ -238,6 +238,9 @@ QImage CVHelper::FourierTransform(const QImage& image) {
 	return cvMat2QImage(magI);
 }
 
+/// @brief OpenCV的函数进行直方图获取
+/// @param image 原始图像
+/// @return 直方图
 QImage CVHelper::Histogram(const QImage& image)
 {
 	//转化为灰度图
@@ -268,6 +271,9 @@ QImage CVHelper::Histogram(const QImage& image)
 	return cvMat2QImage(output);
 }
 
+/// @brief 自己写的直方图获取
+/// @param image 原始图像
+/// @return 直方图
 QImage CVHelper::myHistogram(const QImage& image)
 {
 	//转化为灰度图
@@ -296,6 +302,9 @@ QImage CVHelper::myHistogram(const QImage& image)
 	return cvMat2QImage(output);
 }
 
+/// @brief OpenCV的函数进行直方图均衡化
+/// @param image 原始图像
+/// @return 均衡化后的图像
 QImage CVHelper::HistogramEqualization(const QImage& image)
 {
 	Mat output;
@@ -303,6 +312,9 @@ QImage CVHelper::HistogramEqualization(const QImage& image)
 	return cvMat2QImage(output);
 }
 
+/// @brief 自己写的直方图均衡化
+/// @param image 原始图像
+/// @return 均衡化后的图像
 QImage CVHelper::myHistogramEqualization(const QImage& image)
 {
 	//转化为灰度图

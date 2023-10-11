@@ -34,9 +34,9 @@ private slots:
     void on_actionShowHistogram_triggered();
     /// @brief 直方图均衡化
     void on_actionEqualization_triggered();
-    
+    /// @brief 清空图像
     void on_actionCleanImage_triggered();
-    
+    /// @brief CLAHE算法
     void on_actionCLAHE_triggered();
     //TODO 增加一个按钮使得输出可以保存、转化为输入
     //TODO 增加关闭按键
