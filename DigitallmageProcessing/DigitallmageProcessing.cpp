@@ -267,6 +267,13 @@ void DigitallmageProcessing::on_action_Retreatment_triggered()
 		QMessageBox::warning(this, "警告", "输出图像为空");
 		return;
 	}
+
+	originalImage = processedImage;
+	cleanLabelImage();
+	originalImage.displayImage(originalImageLabel);
+
+	hasImage = true;
+	hasProcessedImage = false;
 }
 
 /// @brief NonlocalMeans非局部均值去噪
