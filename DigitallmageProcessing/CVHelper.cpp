@@ -241,6 +241,7 @@ QImage CVHelper::FourierTransform(const QImage& image) {
 /// @brief OpenCV的函数进行直方图获取
 /// @param image 原始图像
 /// @return 直方图
+/// @note 不再使用，因为自己写的直方图获取更加方便
 QImage CVHelper::Histogram(const QImage& image)
 {
 	//转化为灰度图
@@ -256,7 +257,7 @@ QImage CVHelper::Histogram(const QImage& image)
 	//通过数组创建直方图显示图像
 	int hist_h = image.height();
 	int hist_w = image.width();
-	//TODO 宽度和高度自定义功能
+	//宽度和高度自定义功能
 	int bin_w = cvRound((double)hist_w / histsize);//单位宽度
 	normalize(HistNum, HistNum, 0, hist_h, NORM_MINMAX, -1, Mat());//归一化
 
@@ -305,6 +306,7 @@ QImage CVHelper::myHistogram(const QImage& image)
 /// @brief OpenCV的函数进行直方图均衡化
 /// @param image 原始图像
 /// @return 均衡化后的图像
+/// @note 不再使用，因为自己写的直方图均衡化更加方便
 QImage CVHelper::HistogramEqualization(const QImage& image)
 {
 	Mat output;

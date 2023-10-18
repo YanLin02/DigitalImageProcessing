@@ -38,8 +38,24 @@ private slots:
     void on_actionCleanImage_triggered();
     /// @brief CLAHE算法
     void on_actionCLAHE_triggered();
-    //TODO 增加一个按钮使得输出可以保存、转化为输入
     //TODO 增加关闭按键
+    
+    /// @brief 保存图像
+    void on_actionSaveImg_triggered();
+    
+    void on_actionGaussNoice_triggered();
+    
+    void on_actionSAPNoice_triggered();
+    
+    void on_actionMedianFiltering_triggered();
+    
+    void on_actionAverageFilter_triggered();
+    
+    void on_actionAdaptiveMedianFilters_triggered();
+    /// @brief 将输出重新输入
+    void on_action_Retreatment_triggered();
+    
+    void on_actionNonlocalMeans_triggered();
     
 private:
     Ui::DigitallmageProcessingClass ui;///< UI
@@ -55,6 +71,7 @@ private:
     Image processedImage;///< 处理后图像
 
     bool hasImage;///< 是否已经导入图像
+    bool hasProcessedImage;///< 是否有处理后图像
 
     void cleanLabelImage();///< 清除图像标签
 };

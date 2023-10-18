@@ -28,6 +28,8 @@
      <string>文件</string>
     </property>
     <addaction name="actionOpenFile"/>
+    <addaction name="actionSaveImg"/>
+    <addaction name="action_Retreatment"/>
    </widget>
    <widget class="QMenu" name="menuOperat">
     <property name="title">
@@ -41,7 +43,7 @@
      <addaction name="actionRotate"/>
      <addaction name="actionScale"/>
     </widget>
-    <widget class="QMenu" name="menu">
+    <widget class="QMenu" name="menuHistogram">
      <property name="title">
       <string>直方图操作</string>
      </property>
@@ -49,13 +51,31 @@
      <addaction name="actionEqualization"/>
      <addaction name="actionCLAHE"/>
     </widget>
-    <addaction name="menu"/>
+    <widget class="QMenu" name="menuNoiceProcess">
+     <property name="title">
+      <string>噪声处理</string>
+     </property>
+     <widget class="QMenu" name="menuAddNoice">
+      <property name="title">
+       <string>添加噪声</string>
+      </property>
+      <addaction name="actionGaussNoice"/>
+      <addaction name="actionSAPNoice"/>
+     </widget>
+     <addaction name="menuAddNoice"/>
+     <addaction name="actionMedianFiltering"/>
+     <addaction name="actionAverageFilter"/>
+     <addaction name="actionAdaptiveMedianFilters"/>
+     <addaction name="actionNonlocalMeans"/>
+    </widget>
+    <addaction name="actionCleanImage"/>
+    <addaction name="menuHistogram"/>
     <addaction name="actionFourier"/>
+    <addaction name="menuNoiceProcess"/>
     <addaction name="separator"/>
     <addaction name="menuGeo"/>
     <addaction name="actionGray"/>
     <addaction name="actionEnh"/>
-    <addaction name="actionCleanImage"/>
    </widget>
    <widget class="QMenu" name="menuPerspective">
     <property name="title">
@@ -83,6 +103,7 @@
    </attribute>
    <addaction name="actionOpenFile"/>
    <addaction name="actionCleanImage"/>
+   <addaction name="actionSaveImg"/>
    <addaction name="separator"/>
    <addaction name="actionTranslation"/>
    <addaction name="actionRotate"/>
@@ -162,6 +183,46 @@
   <action name="actionCLAHE">
    <property name="text">
     <string>CLAHE</string>
+   </property>
+  </action>
+  <action name="actionSaveImg">
+   <property name="text">
+    <string>保存结果</string>
+   </property>
+  </action>
+  <action name="actionGaussNoice">
+   <property name="text">
+    <string>高斯噪声</string>
+   </property>
+  </action>
+  <action name="actionSAPNoice">
+   <property name="text">
+    <string>椒盐噪声</string>
+   </property>
+  </action>
+  <action name="actionMedianFiltering">
+   <property name="text">
+    <string>中值处理</string>
+   </property>
+  </action>
+  <action name="actionAverageFilter">
+   <property name="text">
+    <string>均值处理</string>
+   </property>
+  </action>
+  <action name="actionAdaptiveMedianFilters">
+   <property name="text">
+    <string>自适应中值处理</string>
+   </property>
+  </action>
+  <action name="action_Retreatment">
+   <property name="text">
+    <string>重复处理</string>
+   </property>
+  </action>
+  <action name="actionNonlocalMeans">
+   <property name="text">
+    <string>NonlocalMeans</string>
    </property>
   </action>
  </widget>
