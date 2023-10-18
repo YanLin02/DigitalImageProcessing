@@ -34,6 +34,10 @@ DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
 	this->labelPath = new QLabel("图片路径", this);
 	statusBar()->addWidget(this->labelPath);
 
+	// 创建一个512x512的灰度图像
+	cv::Mat image(512, 512, CV_8UC1, cv::Scalar(1));
+	// 保存图像为BMP文件
+	cv::imwrite("gray_image.bmp", image);
 }
 
 /// @brief 析构函数
