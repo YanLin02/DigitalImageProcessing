@@ -17,6 +17,8 @@ public:
 	~NumericSelection();
 
 	void setValue(int value);
+	void setMinimum(int value);
+	void setMaximum(int value);
 
 	int getValue();
 

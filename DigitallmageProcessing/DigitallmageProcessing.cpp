@@ -15,14 +15,15 @@ DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
 	: QMainWindow(parent), hasImage(false), hasProcessedImage(false) {
 	ui.setupUi(this);
 
+	//设置种子
+	srand((unsigned)time(NULL));
+
 	//图像标签创建
 	originalImageLabel = new QLabel(this);
 	processingImageLabel = new QLabel(this);
 	processedImageLabel = new QLabel(this);
 
 	//布局设置
-
-
 	QHBoxLayout* Imagelayout = new QHBoxLayout();
 	Imagelayout->setAlignment(Qt::AlignCenter);
 	Imagelayout->addWidget(originalImageLabel);
@@ -212,7 +213,7 @@ void DigitallmageProcessing::on_actionSaveImg_triggered()
 		QMessageBox::warning(this, "警告", "未选择路径");
 		return;
 	}
-	if (!processedImage.getQImage().save(path,nullptr,100)) {//保存文件失败
+	if (!processedImage.getQImage().save(path, nullptr, 100)) {//保存文件失败
 		QMessageBox::warning(this, "警告", "保存文件失败");
 		return;
 	}
@@ -225,6 +226,26 @@ void DigitallmageProcessing::on_actionGaussNoice_triggered()
 		QMessageBox::warning(this, "警告", "未导入图片");
 		return;
 	}
+
+	//获取高斯噪声均值
+	double mean = 15.0;//默认值
+	NumericSelection* numericSelection = new NumericSelection("高斯噪声均值");
+	numericSelection->setMinimum(0);
+	numericSelection->setValue(15);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {mean = v; });
+	numericSelection->exec();
+
+	//获取高斯噪声方差
+	double sigma = 30.0;//默认值
+	NumericSelection* numericSelection2 = new NumericSelection("高斯噪声方差");
+	numericSelection2->setValue(30);
+	connect(numericSelection2, &NumericSelection::offerValue, this, [&](int v) {sigma = v; });
+	numericSelection2->exec();
+
+	processedImage.setImage(CVHelper::AddGaussNoice(originalImage.getQImage(), mean, sigma));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 /// @brief 椒盐噪声
@@ -234,6 +255,20 @@ void DigitallmageProcessing::on_actionSAPNoice_triggered()
 		QMessageBox::warning(this, "警告", "未导入图片");
 		return;
 	}
+
+	//获取椒盐噪声概率
+	int p = 5;//默认值
+	NumericSelection* numericSelection = new NumericSelection("椒盐噪声概率");
+	numericSelection->setMinimum(0);
+	numericSelection->setMaximum(100);
+	numericSelection->setValue(5);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {p = v; });
+	numericSelection->exec();
+
+	processedImage.setImage(CVHelper::AddSAPNoice(originalImage.getQImage(), p / 100.0));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 /// @brief 中值滤波

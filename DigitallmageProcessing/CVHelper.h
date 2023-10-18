@@ -26,6 +26,10 @@ public:
 
 	static QImage CLAHETran(const QImage& image, double ClipLimit = 40.0, int TilesGridSize = 8);
 
+	static QImage AddGaussNoice(const QImage& image, double mean = 15.0, double sigma = 30.0);
+
+	static QImage AddSAPNoice(const QImage& image, double p = 0.05);
+
 	static QImage cvMat2QImage(const Mat& mat);
 
 	static Mat QImage2cvMat(QImage& image);

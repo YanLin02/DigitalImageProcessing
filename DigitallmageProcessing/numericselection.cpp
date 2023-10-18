@@ -33,6 +33,18 @@ void NumericSelection::setValue(int value)
 	ui->horizontalSlider->setValue(value);
 }
 
+void NumericSelection::setMinimum(int value)
+{
+	ui->spinBox->setMinimum(value);
+	ui->horizontalSlider->setMinimum(value);
+}
+
+void NumericSelection::setMaximum(int value)
+{
+	ui->spinBox->setMaximum(value);
+	ui->horizontalSlider->setMaximum(value);
+}
+
 int NumericSelection::getValue()
 {
 	return ui->spinBox->value();

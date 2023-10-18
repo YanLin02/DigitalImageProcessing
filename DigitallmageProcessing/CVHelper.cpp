@@ -368,4 +368,37 @@ QImage CVHelper::CLAHETran(const QImage& image, double ClipLimit, int TilesGridS
 	return cvMat2QImage(output);
 }
 
+/// @brief 为图片添加高斯噪声
+/// @param image 图片
+/// @param mean 均值
+/// @param sigma 标准差
+/// @return 添加噪声后的图片
+QImage CVHelper::AddGaussNoice(const QImage& image, double mean, double sigma)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+	//生成高斯噪声
+	Mat noise = Mat::zeros(srcImage.rows, srcImage.cols, srcImage.type());
+	RNG rng;//创建一个RNG类<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<可以添加随机种子
+	rng.fill(noise, RNG::NORMAL, mean, sigma);//生成高斯分布随机数
+	Mat dstImage = srcImage + noise;//添加高斯噪声
+
+	return cvMat2QImage(dstImage);
+}
+
+/// @brief 为图片添加椒盐噪声
+/// @param image 图片
+/// @param p 椒盐噪声密度
+/// @return 添加噪声后的图片
+QImage CVHelper::AddSAPNoice(const QImage& image, double p)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+	//生成椒盐噪声
+	for (int i = 0; i < srcImage.rows * srcImage.cols * p; i++) 
+		srcImage.at<uchar>(rand() % srcImage.rows, rand() % srcImage.cols) = (rand() % 2) ? 0 : 255;
+
+	return cvMat2QImage(srcImage);
+}
+
 
