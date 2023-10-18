@@ -198,8 +198,18 @@ void DigitallmageProcessing::on_actionCLAHE_triggered() {
 /// @brief 保存图像
 void DigitallmageProcessing::on_actionSaveImg_triggered()
 {
-	if (!hasProcessedImage) {//没有导入图片无效
+	if (!hasProcessedImage) {//没有输出图片无效
 		QMessageBox::warning(this, "警告", "没有要保存的图片");
+		return;
+	}
+
+	QString path = QFileDialog::getSaveFileName(this, "保存文件", "C:/", "Image Files (*.png *.jpg *.bmp *)");
+	if (path.isEmpty()) {//未选择路径
+		QMessageBox::warning(this, "警告", "未选择路径");
+		return;
+	}
+	if (!processedImage.getQImage().save(path,nullptr,100)) {//保存文件失败
+		QMessageBox::warning(this, "警告", "保存文件失败");
 		return;
 	}
 }
