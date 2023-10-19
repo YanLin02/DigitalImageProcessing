@@ -395,10 +395,95 @@ QImage CVHelper::AddSAPNoice(const QImage& image, double p)
 	//转化为灰度图
 	Mat srcImage = toGrayMat(image);
 	//生成椒盐噪声
-	for (int i = 0; i < srcImage.rows * srcImage.cols * p; i++) 
+	for (int i = 0; i < srcImage.rows * srcImage.cols * p; i++)
 		srcImage.at<uchar>(rand() % srcImage.rows, rand() % srcImage.cols) = (rand() % 2) ? 0 : 255;
 
 	return cvMat2QImage(srcImage);
+}
+
+/// @brief CV的中值滤波
+/// @param image 图像
+/// @param ksize 核大小
+/// @return 滤波后的图像
+QImage CVHelper::MedianFilter(const QImage& image, int ksize)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+	//中值滤波
+	Mat dstImage;//中值滤波后的图像
+	medianBlur(srcImage, dstImage, ksize);
+	return cvMat2QImage(dstImage);
+}
+
+/// @brief 自己写的中值滤波
+/// @param image 图像
+/// @param ksize 核大小
+/// @return 滤波后的图像
+/// @note 由于中值滤波是非线性滤波，所以不能用卷积的方式来实现
+/// @note 本函数采用的是直接遍历的方式，效率较低<超级超级慢>
+QImage CVHelper::myMedianFilter(const QImage& image, int ksize)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+
+	Mat dstImage;
+	dstImage = dstImage.zeros(srcImage.rows, srcImage.cols, srcImage.type());
+
+	copyMakeBorder(srcImage, srcImage, ksize / 2, ksize / 2, ksize / 2, ksize / 2, BORDER_REPLICATE);//复制边界
+	//核
+	uchar* data = new uchar[ksize * ksize];
+	//中值滤波
+	for (int i = ksize / 2; i < srcImage.rows - ksize / 2; i++)
+		for (int j = ksize / 2; j < srcImage.cols - ksize / 2; j++) {
+			int k = 0;
+			for (int m = i - ksize / 2; m <= i + ksize / 2; m++)
+				for (int n = j - ksize / 2; n <= j + ksize / 2; n++)
+					data[k++] = srcImage.at<uchar>(m, n);
+			std::sort(data, data + ksize * ksize);
+			dstImage.at<uchar>(i - ksize / 2, j - ksize / 2) = data[ksize * ksize / 2];
+		}
+
+	delete[] data;
+
+	return cvMat2QImage(dstImage);
+}
+
+/// @brief CV的均值滤波
+/// @param image 图像
+/// @param ksize 核大小
+/// @return 滤波后的图像
+QImage CVHelper::AverageFilter(const QImage& image, int ksize)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+	//中值滤波
+	Mat dstImage;//中值滤波后的图像
+	blur(srcImage, dstImage, Size(ksize, ksize));
+	return cvMat2QImage(dstImage);
+}
+
+QImage CVHelper::myAverageFilter(const QImage& image, int ksize)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+
+	Mat dstImage;
+	dstImage = dstImage.zeros(srcImage.rows, srcImage.cols, srcImage.type());
+
+	copyMakeBorder(srcImage, srcImage, ksize / 2, ksize / 2, ksize / 2, ksize / 2, BORDER_REPLICATE);//复制边界
+
+	//均值滤波
+	for (int i = ksize / 2; i < srcImage.rows - ksize / 2; i++)
+		for (int j = ksize / 2; j < srcImage.cols - ksize / 2; j++) {
+			int k = 0;
+			int sum = 0;
+			for (int m = i - ksize / 2; m <= i + ksize / 2; m++)
+				for (int n = j - ksize / 2; n <= j + ksize / 2; n++)
+					sum += srcImage.at<uchar>(m, n);
+			dstImage.at<uchar>(i - ksize / 2, j - ksize / 2) = sum / (ksize * ksize);
+		}
+
+	return cvMat2QImage(dstImage);
 }
 
 

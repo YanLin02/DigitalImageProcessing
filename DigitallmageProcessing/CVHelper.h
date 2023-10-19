@@ -30,6 +30,12 @@ public:
 
 	static QImage AddSAPNoice(const QImage& image, double p = 0.05);
 
+	static QImage MedianFilter(const QImage& image, int ksize = 3);
+	static QImage myMedianFilter(const QImage& image, int ksize = 3);
+
+	static QImage AverageFilter(const QImage& image, int ksize = 3);
+	static QImage myAverageFilter(const QImage& image, int ksize = 3);
+
 	static QImage cvMat2QImage(const Mat& mat);
 
 	static Mat QImage2cvMat(QImage& image);
@@ -53,8 +59,7 @@ public:
 	/// @return BGR格式的Mat
 	/// @note 不要使用，使用QImagetoBGRMat代替
 	static Mat QImagetoBGRMat(const QImage& image) {
-		//TODO 搞清楚这里的格式转换,RGB和BGR的转化是否能简化
-		QImage RGBimage = image.convertToFormat(QImage::Format_RGB888);//转换为RGB888格式 TODO Alpha通道的处理?
+		QImage RGBimage = image.convertToFormat(QImage::Format_RGB888);//转换为RGB888格式
 		Mat mat(RGBimage.height(), RGBimage.width(), CV_8UC3, RGBimage.bits(), RGBimage.bytesPerLine());
 		cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR);
 		return mat;

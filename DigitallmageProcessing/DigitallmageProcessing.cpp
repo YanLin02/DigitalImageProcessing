@@ -278,6 +278,19 @@ void DigitallmageProcessing::on_actionMedianFiltering_triggered()
 		QMessageBox::warning(this, "警告", "未导入图片");
 		return;
 	}
+
+	//获取核大小
+	int ksize = 3;//默认值
+	NumericSelection* numericSelection = new NumericSelection("核大小");
+	numericSelection->setMaximum(20);
+	numericSelection->setValue(3);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ksize = v; });
+	numericSelection->exec();
+
+	processedImage.setImage(CVHelper::myMedianFilter(originalImage.getQImage(), ksize / 2 * 2 + 1));//<<<<用自己的函数慢上不少
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 /// @brief 均值滤波
@@ -288,6 +301,18 @@ void DigitallmageProcessing::on_actionAverageFilter_triggered()
 		return;
 	}
 
+	//获取核大小
+	int ksize = 3;//默认值
+	NumericSelection* numericSelection = new NumericSelection("核大小");
+	numericSelection->setMaximum(20);
+	numericSelection->setValue(3);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ksize = v; });
+	numericSelection->exec();
+
+	processedImage.setImage(CVHelper::myAverageFilter(originalImage.getQImage(), ksize / 2 * 2 + 1));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 /// @brief 自适应中值滤波
