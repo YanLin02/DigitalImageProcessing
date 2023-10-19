@@ -40,6 +40,8 @@ public:
 	static QImage AdaptiveMedianFilters(const QImage& image, int Maxsize = 7, int Minsize = 3);
 	static uchar adaptiveProcess(const Mat& image, int row, int col, int kernelSize, int maxSize);
 
+	static QImage NonlocalMeansFilter(const QImage& image, int KernelSize = 3, int searchWindowSize = 15, double h = 20.0);
+
 	static QImage cvMat2QImage(const Mat& mat);
 
 	static Mat QImage2cvMat(QImage& image);

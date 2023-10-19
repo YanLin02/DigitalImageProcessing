@@ -14,7 +14,7 @@ NumericSelection::NumericSelection(QString title, QDialog* parent) :
 	//this->setWindowModality(Qt::ApplicationModal);
 	//this->setAttribute(Qt::WA_ShowModal, true);
 
-	//this->setAttribute(Qt::WA_DeleteOnClose, true);
+	this->setAttribute(Qt::WA_DeleteOnClose, true);
 
 	// Connect the spinbox and slider together
 	connect(ui->spinBox, SIGNAL(valueChanged(int)), ui->horizontalSlider, SLOT(setValue(int)));

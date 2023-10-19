@@ -368,5 +368,33 @@ void DigitallmageProcessing::on_actionNonlocalMeans_triggered()
 		QMessageBox::warning(this, "警告", "未导入图片");
 		return;
 	}
+
+	//获取核大小
+	int KernelSize = 3;//默认值
+	NumericSelection* numericSelection = new NumericSelection("核大小");
+	numericSelection->setMaximum(15);
+	numericSelection->setValue(3);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {KernelSize = v / 2 * 2 + 1; });
+	numericSelection->exec();
+
+	//获取搜索窗口大小
+	int searchWindowSize = 15;//默认值
+	NumericSelection* numericSelection2 = new NumericSelection("搜索窗口大小");
+	numericSelection2->setMaximum(33);
+	numericSelection2->setValue(15);
+	connect(numericSelection2, &NumericSelection::offerValue, this, [&](int v) {searchWindowSize = v / 2 * 2 + 1; });
+	numericSelection2->exec();
+
+	//获取参数h
+	int h = 20;//默认值
+	NumericSelection* numericSelection3 = new NumericSelection("参数h");
+	numericSelection3->setValue(20);
+	connect(numericSelection3, &NumericSelection::offerValue, this, [&](int v) {h = v; });
+	numericSelection3->exec();
+
+	processedImage.setImage(CVHelper::NonlocalMeansFilter(originalImage.getQImage(), KernelSize, searchWindowSize, h));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 

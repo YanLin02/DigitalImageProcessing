@@ -519,6 +519,7 @@ QImage CVHelper::AdaptiveMedianFilters(const QImage& image, int Maxsize, int Min
 /// @param kernelSize 核大小
 /// @param maxSize 最大核大小
 /// @return 处理后的像素值
+/// @note 工具函数
 uchar CVHelper::adaptiveProcess(const Mat& im, int row, int col, int kernelSize, int maxSize)
 {
 	uchar* pixels = new uchar[kernelSize * kernelSize];
@@ -552,5 +553,83 @@ uchar CVHelper::adaptiveProcess(const Mat& im, int row, int col, int kernelSize,
 	}
 }
 
+/// @brief 非局部均值滤波
+/// @param image 图像
+/// @param KernelSize 周边核大小
+/// @param searchWindowSize 扫描范围
+/// @param h h越大去噪效果越好，但是图像越模糊，反之h越小去噪效果越差，但去噪之后的失真度越小。
+/// @return 滤波后的图像
+QImage CVHelper::NonlocalMeansFilter(const QImage& image, int KernelSize, int searchWindowSize, double h)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
 
+	//输出图像
+	Mat dstImage;
+	dstImage.create(srcImage.rows, srcImage.cols, CV_8UC1);
 
+	//预计算
+	float* table1 = new float[256];//存储0-255的平方
+	//float table1[256] = { 0 };//存储0-255的平方
+	for (int i = 0; i < 256; i++)
+		table1[i] = (float)(i * i);
+
+	uchar** table2 = new uchar * [256];//存储0-255的差值的绝对值
+	for (int i = 0; i < 256; i++)
+		table2[i] = new uchar[256];
+	//uchar table2[256][256] = { 0 };//存储0-255的差值的绝对值
+	for (int i = 0; i < 256; i++)
+		for (int j = i; j < 256; j++) {
+			table2[i][j] = abs(i - j);
+			table2[j][i] = table2[i][j];
+		}
+
+	int rows = srcImage.rows;//行数
+	int cols = srcImage.cols;//列数
+	int halfKernelSize = KernelSize / 2;//半核大小
+	int halfSearchSize = searchWindowSize / 2;//半搜索框大小
+	int boardSize = halfKernelSize + halfSearchSize;//边界大小
+	copyMakeBorder(srcImage, srcImage, boardSize, boardSize, boardSize, boardSize, BORDER_REFLECT);//边界扩展
+	double h2 = h * h;//h的平方
+
+	//计算每个像素点的值
+	for (int j = boardSize; j < boardSize + rows; j++) {//行遍历
+		uchar* dst_p = dstImage.ptr<uchar>(j - boardSize);//输出图像的行指针。提高效率，比at快
+		for (int i = boardSize; i < boardSize + cols; i++) {//列遍历
+			//对于每个像素点，有如下计算：
+			Mat patchA = srcImage(Range(j - halfKernelSize, j + halfKernelSize), Range(i - halfKernelSize, i + halfKernelSize));//当前像素点的核
+
+			double w = 0;//权重
+			double p = 0;//像素值》累加计算
+			double sumw = 0;//权重和
+
+			for (int sr = -halfSearchSize; sr <= halfSearchSize; sr++) {//在搜索框内遍历搜索 sr:search row, sc:search col
+				uchar* boardSrc_p = srcImage.ptr<uchar>(j + sr);
+				for (int sc = -halfSearchSize; sc <= halfSearchSize; sc++) {
+					//对于搜索框内的每个像素点，有如下计算：
+					Mat patchB = srcImage(Range(j + sr - halfKernelSize, j + sr + halfKernelSize), Range(i + sc - halfKernelSize, i + sc + halfKernelSize));//搜索框内遍历的核
+
+					//计算两个核的均方误差
+					float MSE = 0.0;
+					for (int a = 0; a < patchA.rows; a++) {
+						uchar* data1 = patchA.ptr<uchar>(a);
+						uchar* data2 = patchB.ptr<uchar>(a);
+						for (int b = 0; b < patchA.cols; b++)
+							MSE += table1[table2[data1[b]][data2[b]]];//两点灰度差值的平方累计
+					}
+					MSE = MSE / (patchA.rows * patchB.cols);//除以核的大小
+
+					w = exp(-MSE / h2);
+					p += boardSrc_p[i + sc] * w;//像素值乘以权重 的累计
+					sumw += w;
+				}
+			}
+			dst_p[i - boardSize] = saturate_cast<uchar>(p / sumw);//该点赋值
+		}
+	}
+	delete[] table1;
+	for (int i = 0; i < 256; i++)
+		delete[] table2[i];
+	delete[] table2;
+	return cvMat2QImage(dstImage);
+}
