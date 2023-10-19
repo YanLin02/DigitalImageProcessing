@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">
@@ -104,6 +104,7 @@
    <addaction name="actionOpenFile"/>
    <addaction name="actionCleanImage"/>
    <addaction name="actionSaveImg"/>
+   <addaction name="action_Retreatment"/>
    <addaction name="separator"/>
    <addaction name="actionTranslation"/>
    <addaction name="actionRotate"/>

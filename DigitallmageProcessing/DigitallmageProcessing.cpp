@@ -48,7 +48,7 @@ DigitallmageProcessing::~DigitallmageProcessing() {}
 void DigitallmageProcessing::on_actionOpenFile_triggered() {
 	QString path = QFileDialog::getOpenFileName(this, "打开文件", "C:/", "Image Files (*.png *.jpg *.bmp *)");
 	if (path.isEmpty()) {//未选择路径
-		QMessageBox::warning(this, "警告", "未选择路径");
+		//QMessageBox::warning(this, "警告", "未选择路径");
 		return;
 	}
 	if (!originalImage.loadImage(path)) {//打开文件失败
