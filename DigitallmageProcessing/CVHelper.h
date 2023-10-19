@@ -10,6 +10,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 #include <QImage>
+#include <vector>
 
 using namespace cv;
 
@@ -35,6 +36,9 @@ public:
 
 	static QImage AverageFilter(const QImage& image, int ksize = 3);
 	static QImage myAverageFilter(const QImage& image, int ksize = 3);
+
+	static QImage AdaptiveMedianFilters(const QImage& image, int Maxsize = 7, int Minsize = 3);
+	static uchar adaptiveProcess(const Mat& image, int row, int col, int kernelSize, int maxSize);
 
 	static QImage cvMat2QImage(const Mat& mat);
 

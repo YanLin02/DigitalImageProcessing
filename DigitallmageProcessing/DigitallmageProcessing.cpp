@@ -282,12 +282,12 @@ void DigitallmageProcessing::on_actionMedianFiltering_triggered()
 	//获取核大小
 	int ksize = 3;//默认值
 	NumericSelection* numericSelection = new NumericSelection("核大小");
-	numericSelection->setMaximum(20);
+	numericSelection->setMaximum(21);
 	numericSelection->setValue(3);
-	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ksize = v; });
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ksize = v / 2 * 2 + 1; });
 	numericSelection->exec();
 
-	processedImage.setImage(CVHelper::myMedianFilter(originalImage.getQImage(), ksize / 2 * 2 + 1));//<<<<用自己的函数慢上不少
+	processedImage.setImage(CVHelper::myMedianFilter(originalImage.getQImage(), ksize));//<<<<用自己的函数慢上不少
 	processedImage.displayImage(processedImageLabel);
 
 	hasProcessedImage = true;//有处理后图像
@@ -304,12 +304,12 @@ void DigitallmageProcessing::on_actionAverageFilter_triggered()
 	//获取核大小
 	int ksize = 3;//默认值
 	NumericSelection* numericSelection = new NumericSelection("核大小");
-	numericSelection->setMaximum(20);
+	numericSelection->setMaximum(21);
 	numericSelection->setValue(3);
-	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ksize = v; });
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ksize = v / 2 * 2 + 1; });
 	numericSelection->exec();
 
-	processedImage.setImage(CVHelper::myAverageFilter(originalImage.getQImage(), ksize / 2 * 2 + 1));
+	processedImage.setImage(CVHelper::myAverageFilter(originalImage.getQImage(), ksize));
 	processedImage.displayImage(processedImageLabel);
 
 	hasProcessedImage = true;//有处理后图像
@@ -322,6 +322,27 @@ void DigitallmageProcessing::on_actionAdaptiveMedianFilters_triggered()
 		QMessageBox::warning(this, "警告", "未导入图片");
 		return;
 	}
+
+	//获取最大核大小
+	int Maxsize = 7;//默认值
+	NumericSelection* numericSelection = new NumericSelection("最大核大小");
+	numericSelection->setMaximum(21);
+	numericSelection->setValue(7);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {Maxsize = v / 2 * 2 + 1; });
+	numericSelection->exec();
+
+	//获取最小核大小
+	int Minsize = 3;//默认值
+	NumericSelection* numericSelection2 = new NumericSelection("最小核大小");
+	numericSelection2->setMaximum(21);
+	numericSelection2->setValue(3);
+	connect(numericSelection2, &NumericSelection::offerValue, this, [&](int v) {Minsize = v / 2 * 2 + 1; });
+	numericSelection2->exec();
+
+	processedImage.setImage(CVHelper::AdaptiveMedianFilters(originalImage.getQImage(), Maxsize, Minsize));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 /// @brief 将输出重新输入

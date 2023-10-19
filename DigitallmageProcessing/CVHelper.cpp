@@ -462,6 +462,10 @@ QImage CVHelper::AverageFilter(const QImage& image, int ksize)
 	return cvMat2QImage(dstImage);
 }
 
+/// @brief 我的均值滤波
+/// @param image 图像
+/// @param ksize 核大小
+/// @return 滤波后的图像
 QImage CVHelper::myAverageFilter(const QImage& image, int ksize)
 {
 	//转化为灰度图
@@ -485,5 +489,68 @@ QImage CVHelper::myAverageFilter(const QImage& image, int ksize)
 
 	return cvMat2QImage(dstImage);
 }
+
+/// @brief 自适应中值滤波
+/// @param image 图像
+/// @param Maxsize 最大核大小
+/// @param Minsize 初始核大小
+/// @return 滤波后的图像
+QImage CVHelper::AdaptiveMedianFilters(const QImage& image, int Maxsize, int Minsize)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+
+	Mat dstImage;
+	dstImage = dstImage.zeros(srcImage.rows, srcImage.cols, srcImage.type());
+
+	copyMakeBorder(srcImage, srcImage, Maxsize / 2, Maxsize / 2, Maxsize / 2, Maxsize / 2, BORDER_REPLICATE);//复制边界
+
+	for (int i = Maxsize / 2; i < srcImage.rows - Maxsize / 2; i++)
+		for (int j = Maxsize / 2; j < srcImage.cols - Maxsize / 2; j++)
+			dstImage.at<uchar>(i - Maxsize / 2, j - Maxsize / 2) = adaptiveProcess(srcImage, i, j, Minsize, Maxsize);
+
+	return cvMat2QImage(dstImage);
+}
+
+/// @brief 自适应中值滤波的递归函数
+/// @param im 图像
+/// @param row 当前行
+/// @param col 当前列
+/// @param kernelSize 核大小
+/// @param maxSize 最大核大小
+/// @return 处理后的像素值
+uchar CVHelper::adaptiveProcess(const Mat& im, int row, int col, int kernelSize, int maxSize)
+{
+	uchar* pixels = new uchar[kernelSize * kernelSize];
+	int index = 0;
+
+	for (int a = -kernelSize / 2; a <= kernelSize / 2; a++)
+		for (int b = -kernelSize / 2; b <= kernelSize / 2; b++)
+			pixels[index++] = im.at<uchar>(row + a, col + b);
+
+	std::sort(pixels, pixels + kernelSize * kernelSize);
+
+	uchar Fmin = pixels[0];//最小值
+	uchar Fmax = pixels[kernelSize * kernelSize - 1];//最大值
+	uchar Fmed = pixels[kernelSize * kernelSize / 2];//中值
+	uchar Fij = im.at<uchar>(row, col);//当前值
+
+	delete[] pixels;
+
+	if (Fmed > Fmin && Fmed < Fmax) {//中值在最大最小值之间,转到第二步
+		if (Fij > Fmin && Fij < Fmax)//当前值在最大最小值之间
+			return Fij;
+		else
+			return Fmed;
+	}
+	else {//中值不在最大最小值之间,转到第一步
+		kernelSize += 2;
+		if (kernelSize <= maxSize)//核大小小于最大核大小
+			return adaptiveProcess(im, row, col, kernelSize, maxSize); //增大窗口尺寸
+		else
+			return Fmed;
+	}
+}
+
 
 
