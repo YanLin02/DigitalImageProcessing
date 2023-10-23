@@ -5,6 +5,10 @@
 #include <qstring.h>
 #include <opencv2/opencv.hpp>
 #include <qpixmap.h>
+#include "CVHelper.h"
+#include <string>
+#include <qimagereader.h>
+#include <qfile.h>
 
 using cv::Mat;
 using std::complex;
@@ -26,7 +30,15 @@ public:
 	/// @param fileName 图像路径
 	/// @return 是否加载成功
 	bool loadImage(const QString& fileName) {
-		return image.load(fileName);
+		QImageReader reader(fileName);
+		reader.setAutoTransform(true);
+		const QImage newImage = reader.read();
+		if (newImage.isNull()) {
+			// TODO Try to load image using OpenCV
+			return false;
+		}
+		this->image = newImage;
+		return true;
 	}
 
 	/// @brief 向指定标签显示图像
@@ -43,7 +55,7 @@ public:
 	QImage getQImage() {
 		return image;
 	}
-	QImage getQImage() const{
+	QImage getQImage() const {
 		return image;
 	}
 

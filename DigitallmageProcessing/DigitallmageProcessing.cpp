@@ -287,7 +287,7 @@ void DigitallmageProcessing::on_actionMedianFiltering_triggered()
 	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ksize = v / 2 * 2 + 1; });
 	numericSelection->exec();
 
-	processedImage.setImage(CVHelper::myMedianFilter(originalImage.getQImage(), ksize));//<<<<用自己的函数慢上不少
+	processedImage.setImage(CVHelper::MedianFilter(originalImage.getQImage(), ksize));//<<<<用自己的函数慢上不少
 	processedImage.displayImage(processedImageLabel);
 
 	hasProcessedImage = true;//有处理后图像
@@ -309,7 +309,7 @@ void DigitallmageProcessing::on_actionAverageFilter_triggered()
 	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {ksize = v / 2 * 2 + 1; });
 	numericSelection->exec();
 
-	processedImage.setImage(CVHelper::myAverageFilter(originalImage.getQImage(), ksize));
+	processedImage.setImage(CVHelper::AverageFilter(originalImage.getQImage(), ksize));
 	processedImage.displayImage(processedImageLabel);
 
 	hasProcessedImage = true;//有处理后图像
