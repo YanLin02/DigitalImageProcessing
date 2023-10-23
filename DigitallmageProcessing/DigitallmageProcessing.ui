@@ -68,14 +68,21 @@
      <addaction name="actionAdaptiveMedianFilters"/>
      <addaction name="actionNonlocalMeans"/>
     </widget>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>图像增强</string>
+     </property>
+     <addaction name="actionsecond_derivative"/>
+     <addaction name="actionUnsharp_Masking"/>
+    </widget>
     <addaction name="actionCleanImage"/>
+    <addaction name="actionGray"/>
     <addaction name="menuHistogram"/>
     <addaction name="actionFourier"/>
     <addaction name="menuNoiceProcess"/>
+    <addaction name="menu"/>
     <addaction name="separator"/>
     <addaction name="menuGeo"/>
-    <addaction name="actionGray"/>
-    <addaction name="actionEnh"/>
    </widget>
    <widget class="QMenu" name="menuPerspective">
     <property name="title">
@@ -102,23 +109,22 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpenFile"/>
-   <addaction name="actionCleanImage"/>
    <addaction name="actionSaveImg"/>
+   <addaction name="separator"/>
+   <addaction name="actionCleanImage"/>
    <addaction name="action_Retreatment"/>
    <addaction name="separator"/>
    <addaction name="actionTranslation"/>
    <addaction name="actionRotate"/>
    <addaction name="actionScale"/>
-   <addaction name="separator"/>
    <addaction name="actionGray"/>
-   <addaction name="separator"/>
-   <addaction name="actionEnh"/>
    <addaction name="separator"/>
    <addaction name="actionFourier"/>
    <addaction name="separator"/>
    <addaction name="actionShowHistogram"/>
    <addaction name="actionEqualization"/>
    <addaction name="actionCLAHE"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpenFile">
@@ -129,11 +135,6 @@
   <action name="actionGray">
    <property name="text">
     <string>灰度变换</string>
-   </property>
-  </action>
-  <action name="actionEnh">
-   <property name="text">
-    <string>图像增强</string>
    </property>
   </action>
   <action name="actionTranslation">
@@ -224,6 +225,16 @@
   <action name="actionNonlocalMeans">
    <property name="text">
     <string>NonlocalMeans</string>
+   </property>
+  </action>
+  <action name="actionsecond_derivative">
+   <property name="text">
+    <string>二阶导数</string>
+   </property>
+  </action>
+  <action name="actionUnsharp_Masking">
+   <property name="text">
+    <string>非锐化掩蔽</string>
    </property>
   </action>
  </widget>

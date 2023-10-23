@@ -633,3 +633,59 @@ QImage CVHelper::NonlocalMeansFilter(const QImage& image, int KernelSize, int se
 	delete[] table2;
 	return cvMat2QImage(dstImage);
 }
+
+/// @brief 二阶导数图像增强
+/// @param image 图像
+/// @return 增强后的图像
+QImage CVHelper::SecondDerivative(const QImage& image)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+	Mat dstImage = srcImage.clone();
+
+	copyMakeBorder(srcImage, srcImage, 1, 1, 1, 1, BORDER_REPLICATE);//复制边界
+
+	//int kernel[9] = {
+	//	0, -1, 0,
+	//	-1, 4, -1,
+	//	0, -1, 0 };
+
+	int kernel[9] = {
+	-1, -1, -1,
+	-1,  8, -1,
+	-1, -1, -1 };
+
+	int pix;
+	for (int i = 1; i < srcImage.rows - 1; i++) {
+		for (int j = 1; j < srcImage.cols - 1; j++) {
+			pix = kernel[0] * srcImage.at<uchar>(i - 1, j - 1)
+				+ kernel[1] * srcImage.at<uchar>(i - 1, j)
+				+ kernel[2] * srcImage.at<uchar>(i - 1, j + 1)
+				+ kernel[3] * srcImage.at<uchar>(i, j - 1)
+				+ kernel[4] * srcImage.at<uchar>(i, j)
+				+ kernel[5] * srcImage.at<uchar>(i, j + 1)
+				+ kernel[6] * srcImage.at<uchar>(i + 1, j - 1)
+				+ kernel[7] * srcImage.at<uchar>(i + 1, j)
+				+ kernel[8] * srcImage.at<uchar>(i + 1, j + 1);
+
+			dstImage.at<uchar>(i - 1, j - 1) = saturate_cast<uchar>(dstImage.at<uchar>(i - 1, j - 1) + pix);
+		}
+	}
+
+	return cvMat2QImage(dstImage);
+}
+
+QImage CVHelper::UnsharpMasking(const QImage& image, double weight)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+
+	Mat unsharp;
+	GaussianBlur(srcImage, unsharp, Size(5, 5), 5);//高斯模糊
+
+	Mat mask = srcImage - unsharp;//掩膜
+
+	Mat dstImage = srcImage + weight * mask;//锐化
+
+	return cvMat2QImage(dstImage);
+}

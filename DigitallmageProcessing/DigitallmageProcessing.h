@@ -20,8 +20,6 @@ private slots:
     void on_actionOpenFile_triggered();
     /// @brief 灰度化
     void on_actionGray_triggered();
-    /// @brief 增强
-    void on_actionEnh_triggered();
     /// @brief 平移
     void on_actionTranslation_triggered();
     /// @brief 旋转
@@ -56,6 +54,10 @@ private slots:
     void on_action_Retreatment_triggered();
     
     void on_actionNonlocalMeans_triggered();
+    
+    void on_actionsecond_derivative_triggered();
+    
+    void on_actionUnsharp_Masking_triggered();
     
 private:
     Ui::DigitallmageProcessingClass ui;///< UI

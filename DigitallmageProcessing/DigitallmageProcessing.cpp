@@ -73,14 +73,11 @@ void DigitallmageProcessing::on_actionGray_triggered() {
 		QMessageBox::warning(this, "警告", "未导入图片");
 		return;
 	}
-}
 
-/// @brief 增强
-void DigitallmageProcessing::on_actionEnh_triggered() {
-	if (!hasImage) {//没有导入图片无效
-		QMessageBox::warning(this, "警告", "未导入图片");
-		return;
-	}
+	processedImage.setImage(CVHelper::cvMat2QImage(CVHelper::toGrayMat(originalImage.getQImage())));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 /// @brief 平移
@@ -393,6 +390,43 @@ void DigitallmageProcessing::on_actionNonlocalMeans_triggered()
 	numericSelection3->exec();
 
 	processedImage.setImage(CVHelper::NonlocalMeansFilter(originalImage.getQImage(), KernelSize, searchWindowSize, h));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
+}
+
+
+void DigitallmageProcessing::on_actionsecond_derivative_triggered()
+{
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	processedImage.setImage(CVHelper::SecondDerivative(originalImage.getQImage()));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
+}
+
+
+void DigitallmageProcessing::on_actionUnsharp_Masking_triggered()
+{
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	//获取参数
+	double weight = 0.0;//默认值
+	NumericSelection* numericSelection = new NumericSelection("权重");
+	numericSelection->setMinimum(-100);
+	numericSelection->setMaximum(100);
+	numericSelection->setValue(0);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {weight = v / 100.0; });
+	numericSelection->exec();
+
+	processedImage.setImage(CVHelper::UnsharpMasking(originalImage.getQImage(), weight));
 	processedImage.displayImage(processedImageLabel);
 
 	hasProcessedImage = true;//有处理后图像
