@@ -421,7 +421,7 @@ void DigitallmageProcessing::on_actionUnsharp_Masking_triggered()
 	double weight = 0.0;//默认值
 	NumericSelection* numericSelection = new NumericSelection("权重");
 	numericSelection->setMinimum(-100);
-	numericSelection->setMaximum(100);
+	numericSelection->setMaximum(1000);
 	numericSelection->setValue(0);
 	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {weight = v / 100.0; });
 	numericSelection->exec();

@@ -645,15 +645,15 @@ QImage CVHelper::SecondDerivative(const QImage& image)
 
 	copyMakeBorder(srcImage, srcImage, 1, 1, 1, 1, BORDER_REPLICATE);//复制边界
 
-	//int kernel[9] = {
-	//	0, -1, 0,
-	//	-1, 4, -1,
-	//	0, -1, 0 };
-
 	int kernel[9] = {
-	-1, -1, -1,
-	-1,  8, -1,
-	-1, -1, -1 };
+		0, -1, 0,
+		-1, 4, -1,
+		0, -1, 0 };
+
+	//int kernel[9] = {
+	//-1, -1, -1,
+	//-1,  8, -1,
+	//-1, -1, -1 };
 
 	int pix;
 	for (int i = 1; i < srcImage.rows - 1; i++) {
@@ -675,6 +675,10 @@ QImage CVHelper::SecondDerivative(const QImage& image)
 	return cvMat2QImage(dstImage);
 }
 
+/// @brief 非锐化掩蔽
+/// @param image 图像
+/// @param weight 增强权重
+/// @return 增强后的图像
 QImage CVHelper::UnsharpMasking(const QImage& image, double weight)
 {
 	//转化为灰度图
