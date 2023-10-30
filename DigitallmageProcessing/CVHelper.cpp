@@ -634,6 +634,48 @@ QImage CVHelper::NonlocalMeansFilter(const QImage& image, int KernelSize, int se
 	return cvMat2QImage(dstImage);
 }
 
+/// @brief 自适应局部降噪滤波
+/// @param image 图像
+/// @param LocalHalfSize 局部大小
+/// @param noiseVar 噪声方差
+/// @return 滤波后的图像
+QImage CVHelper::AdaptiveLocalFilter(const QImage& image, int LocalHalfSize, double noiseVar)
+{
+	//转化为灰度图
+	Mat srcImage = toGrayMat(image);
+
+	//输出图像
+	Mat dstImage;
+	dstImage.create(srcImage.rows, srcImage.cols, CV_8UC1);
+
+	copyMakeBorder(srcImage, srcImage, LocalHalfSize, LocalHalfSize, LocalHalfSize, LocalHalfSize, BORDER_REFLECT);
+
+
+	for (int i = LocalHalfSize; i < srcImage.rows - LocalHalfSize; i++)
+		for (int j = LocalHalfSize; j < srcImage.cols - LocalHalfSize; j++)
+		{
+			Mat local(srcImage, Rect(j - LocalHalfSize, i - LocalHalfSize, 2 * LocalHalfSize + 1, 2 * LocalHalfSize + 1));//局部块
+			Mat m_localMean, m_localStddev; //局部均值标准差矩阵
+			double localmean, localstddev;  //图像标准差，局部均值和标准差
+			meanStdDev(local, m_localMean, m_localStddev); //获取局部块的平均值和标准差矩阵
+			localmean = m_localMean.at<double>(0, 0);  //局部均值
+			localstddev = m_localStddev.at<double>(0, 0);  //局部标准差
+
+			double k;  //滤波系数
+			if (localstddev == 0)//防止除0
+				k = 1;
+			else
+				k = (noiseVar * noiseVar) / (localstddev * localstddev);
+
+			if (k < 1)//防止k大于1
+				dstImage.at<uchar>(i - LocalHalfSize, j - LocalHalfSize) = srcImage.at<uchar>(i, j) - k * (srcImage.at<uchar>(i, j) - localmean);
+			else
+				dstImage.at<uchar>(i - LocalHalfSize, j - LocalHalfSize) = localmean;
+		}
+
+	return cvMat2QImage(dstImage);
+}
+
 /// @brief 二阶导数图像增强
 /// @param image 图像
 /// @return 增强后的图像

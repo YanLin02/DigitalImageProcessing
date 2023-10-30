@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">
@@ -67,6 +67,7 @@
      <addaction name="actionAverageFilter"/>
      <addaction name="actionAdaptiveMedianFilters"/>
      <addaction name="actionNonlocalMeans"/>
+     <addaction name="actionAdaptiveLocalFilter"/>
     </widget>
     <widget class="QMenu" name="menu">
      <property name="title">
@@ -235,6 +236,11 @@
   <action name="actionUnsharp_Masking">
    <property name="text">
     <string>非锐化掩蔽</string>
+   </property>
+  </action>
+  <action name="actionAdaptiveLocalFilter">
+   <property name="text">
+    <string>自适应局部降噪</string>
    </property>
   </action>
  </widget>

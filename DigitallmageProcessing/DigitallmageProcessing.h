@@ -59,6 +59,8 @@ private slots:
     
     void on_actionUnsharp_Masking_triggered();
     
+    void on_actionAdaptiveLocalFilter_triggered();
+    
 private:
     Ui::DigitallmageProcessingClass ui;///< UI
 

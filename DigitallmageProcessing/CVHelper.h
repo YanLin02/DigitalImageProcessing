@@ -42,6 +42,8 @@ public:
 
 	static QImage NonlocalMeansFilter(const QImage& image, int KernelSize = 3, int searchWindowSize = 15, double h = 20.0);
 
+	static QImage AdaptiveLocalFilter(const QImage& image, int LocalHalfSize = 3, double noiseVar = 30.0);
+
 	static QImage SecondDerivative(const QImage& image);
 
 	static QImage UnsharpMasking(const QImage& image, double weight = 0.6);

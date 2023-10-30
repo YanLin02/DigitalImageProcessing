@@ -432,3 +432,31 @@ void DigitallmageProcessing::on_actionUnsharp_Masking_triggered()
 	hasProcessedImage = true;//有处理后图像
 }
 
+
+void DigitallmageProcessing::on_actionAdaptiveLocalFilter_triggered()
+{
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	//获取参数
+	int LocalHalfSize = 3;
+	NumericSelection* numericSelection = new NumericSelection("局部半径");
+	numericSelection->setMaximum(50);
+	numericSelection->setValue(3);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {LocalHalfSize = v; });
+	numericSelection->exec();
+
+	double noiseVar = 30.0;
+	NumericSelection* numericSelection2 = new NumericSelection("噪声方差");
+	numericSelection2->setValue(30);
+	connect(numericSelection2, &NumericSelection::offerValue, this, [&](int v) {noiseVar = v; });
+	numericSelection2->exec();
+
+	processedImage.setImage(CVHelper::AdaptiveLocalFilter(originalImage.getQImage(), LocalHalfSize, noiseVar));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
+}
+
