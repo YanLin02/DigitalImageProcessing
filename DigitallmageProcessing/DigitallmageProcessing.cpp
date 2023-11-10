@@ -395,7 +395,7 @@ void DigitallmageProcessing::on_actionNonlocalMeans_triggered()
 	hasProcessedImage = true;//有处理后图像
 }
 
-
+/// @brief 二阶导数
 void DigitallmageProcessing::on_actionsecond_derivative_triggered()
 {
 	if (!hasImage) {
@@ -409,7 +409,7 @@ void DigitallmageProcessing::on_actionsecond_derivative_triggered()
 	hasProcessedImage = true;//有处理后图像
 }
 
-
+/// @brief 非锐化掩蔽
 void DigitallmageProcessing::on_actionUnsharp_Masking_triggered()
 {
 	if (!hasImage) {
@@ -432,7 +432,7 @@ void DigitallmageProcessing::on_actionUnsharp_Masking_triggered()
 	hasProcessedImage = true;//有处理后图像
 }
 
-
+/// @brief 自适应局部降噪
 void DigitallmageProcessing::on_actionAdaptiveLocalFilter_triggered()
 {
 	if (!hasImage) {
