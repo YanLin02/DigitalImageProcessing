@@ -206,10 +206,8 @@ void DigitallmageProcessing::on_actionSaveImg_triggered()
 	}
 
 	QString path = QFileDialog::getSaveFileName(this, "保存文件", "C:/", "Image Files (*.png *.jpg *.bmp *)");
-	if (path.isEmpty()) {//未选择路径
-		QMessageBox::warning(this, "警告", "未选择路径");
-		return;
-	}
+	if (path.isEmpty()) return; //未选择路径
+
 	if (!processedImage.getQImage().save(path, nullptr, 100)) {//保存文件失败
 		QMessageBox::warning(this, "警告", "保存文件失败");
 		return;
