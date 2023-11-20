@@ -30,6 +30,8 @@
     <addaction name="actionOpenFile"/>
     <addaction name="actionSaveImg"/>
     <addaction name="action_Retreatment"/>
+    <addaction name="actionjpeg"/>
+    <addaction name="actionjpeg2000"/>
    </widget>
    <widget class="QMenu" name="menuOperat">
     <property name="title">
@@ -241,6 +243,16 @@
   <action name="actionAdaptiveLocalFilter">
    <property name="text">
     <string>自适应局部降噪</string>
+   </property>
+  </action>
+  <action name="actionjpeg">
+   <property name="text">
+    <string>保存为JPEG格式</string>
+   </property>
+  </action>
+  <action name="actionjpeg2000">
+   <property name="text">
+    <string>保存为JPEG2000格式</string>
    </property>
   </action>
  </widget>

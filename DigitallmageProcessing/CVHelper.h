@@ -13,6 +13,7 @@
 #include <vector>
 
 using namespace cv;
+using std::vector;
 
 class CVHelper
 {
@@ -51,6 +52,10 @@ public:
 	static QImage cvMat2QImage(const Mat& mat);
 
 	static Mat QImage2cvMat(QImage& image);
+
+	static bool saveAsJPEG(const QImage& image, const QString& fileName, int quality = 100);
+
+	static bool saveAsJPEG2000(const QImage& image, const QString& fileName, int quality = 100);
 
 	/// @brief 将Mat转换为QImage
 	/// @param mat BGR的Mat

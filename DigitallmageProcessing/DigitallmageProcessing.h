@@ -61,6 +61,10 @@ private slots:
     
     void on_actionAdaptiveLocalFilter_triggered();
     
+    void on_actionjpeg_triggered();
+    
+    void on_actionjpeg2000_triggered();
+    
 private:
     Ui::DigitallmageProcessingClass ui;///< UI
 

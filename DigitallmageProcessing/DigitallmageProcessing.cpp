@@ -1,4 +1,5 @@
 ﻿#include "DigitallmageProcessing.h"
+#include <opencv2/opencv.hpp>
 #include <qmenubar.h>
 #include <qfiledialog.h>
 #include <qmessagebox.h>
@@ -52,8 +53,13 @@ void DigitallmageProcessing::on_actionOpenFile_triggered() {
 		return;
 	}
 	if (!originalImage.loadImage(path)) {//打开文件失败
-		QMessageBox::warning(this, "警告", "打开文件失败");
-		return;
+		cv::Mat img;
+		img = cv::imread(path.toStdString());
+		if (img.empty()) {
+			QMessageBox::warning(this, "警告", "打开文件失败(检查中文路径)");
+			return;
+		}
+		originalImage.setImage(CVHelper::cvMat2QImage(img));
 	}
 	//状态栏显示路径
 	labelPath->setText(path);
@@ -456,5 +462,57 @@ void DigitallmageProcessing::on_actionAdaptiveLocalFilter_triggered()
 	processedImage.displayImage(processedImageLabel);
 
 	hasProcessedImage = true;//有处理后图像
+}
+
+
+void DigitallmageProcessing::on_actionjpeg_triggered()
+{
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	QString path = QFileDialog::getSaveFileName(this, "保存文件", "C:/", "Image Files (*.jpg)");
+	if (path.isEmpty()) return; //未选择路径
+
+	//获取参数
+	int quality = 95;
+	NumericSelection* numericSelection = new NumericSelection("压缩质量");
+	numericSelection->setMaximum(100);
+	numericSelection->setValue(95);
+	numericSelection->setMinimum(0);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {quality = v; });
+	numericSelection->exec();
+
+	if (!CVHelper::saveAsJPEG(originalImage.getQImage(), path, quality)) {//保存文件失败
+		QMessageBox::warning(this, "警告", "保存文件失败(检查中文路径)");
+		return;
+	}
+}
+
+
+void DigitallmageProcessing::on_actionjpeg2000_triggered()
+{
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	QString path = QFileDialog::getSaveFileName(this, "保存文件", "C:/", "Image Files (*.jp2)");
+	if (path.isEmpty()) return; //未选择路径
+
+	//获取参数
+	int quality = 95;
+	NumericSelection* numericSelection = new NumericSelection("压缩质量");
+	numericSelection->setMaximum(100);
+	numericSelection->setValue(95);
+	numericSelection->setMinimum(0);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {quality = v; });
+	numericSelection->exec();
+
+	if (!CVHelper::saveAsJPEG2000(originalImage.getQImage(), path, quality)) {//保存文件失败
+		QMessageBox::warning(this, "警告", "保存文件失败(检查中文路径)");
+		return;
+	}
 }
 

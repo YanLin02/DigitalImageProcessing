@@ -178,6 +178,34 @@ Mat CVHelper::QImage2cvMat(QImage& image) {
 	return mat;
 }
 
+/// @brief 保存文件为JPEG格式
+/// @param image 原始图像
+/// @param fileName 路径
+/// @param quality 0-100 图像质量
+/// @return 是否保存成功
+bool CVHelper::saveAsJPEG(const QImage& image, const QString& fileName, int quality)
+{
+	Mat srcImage = toGrayMat(image);
+	vector <int> compression_params;
+	compression_params.push_back(IMWRITE_JPEG_QUALITY);
+	compression_params.push_back(quality);
+	return imwrite(fileName.toStdString(), srcImage, compression_params);
+}
+
+/// @brief 保存文件为JPEG2000格式
+/// @param image 原始图像
+/// @param fileName 路径
+/// @param quality 0-100 图像质量
+/// @return 是否保存成功
+bool CVHelper::saveAsJPEG2000(const QImage& image, const QString& fileName, int quality)
+{
+	Mat srcImage = toGrayMat(image);
+	vector <int> compression_params;
+	compression_params.push_back(IMWRITE_JPEG2000_COMPRESSION_X1000);
+	compression_params.push_back(quality * 10);
+	return imwrite(fileName.toStdString(), srcImage, compression_params);
+}
+
 /// @brief 利用OpenCV的函数进行傅里叶变换
 /// @param image QImage图像
 /// @return 傅里叶变换后的QImage图像
