@@ -256,6 +256,99 @@ QImage CVHelper::Dilation(const QImage& image)
 	return cvMat2QImage(dstImage);
 }
 
+QImage CVHelper::GlobalThresholding(const QImage& image, int& threshold, int defth)
+{
+	const int delta = 0;
+	Mat srcImage = toGrayMat(image);
+
+	if (defth == -1) {
+		Scalar mean = cv::mean(srcImage);
+		threshold = mean[0];
+	}
+	else {
+		threshold = defth;
+	}
+
+	//计算图像直方图数组
+	int histsize = 256;//直方图等级
+	float ranges[] = { 0,256 };//灰度级范围
+	const float* histRanges = { ranges };
+	Mat HistNum;//容纳直方图数组
+	calcHist(&srcImage, 1, 0, Mat(), HistNum, 1, &histsize, &histRanges, true, false);//计算直方图
+
+	int old = threshold;
+
+	do
+	{
+		old = threshold;
+		int sum1 = 0, sum2 = 0, num1 = 0, num2 = 0;
+		for (int i = 0; i < threshold; i++) {
+			sum1 += i * HistNum.at<float>(i);
+			num1 += HistNum.at<float>(i);
+		}
+		for (int i = threshold; i < 256; i++) {
+			sum2 += i * HistNum.at<float>(i);
+			num2 += HistNum.at<float>(i);
+		}
+		threshold = (sum1 / num1 + sum2 / num2) / 2;
+	} while (abs(threshold - old) > delta);
+
+	Mat dstImage;
+	dstImage.create(srcImage.rows, srcImage.cols, CV_8UC1);
+
+	for (int i = 0; i < srcImage.rows; ++i) {
+		for (int j = 0; j < srcImage.cols; ++j) {
+			dstImage.at<uchar>(i, j) = srcImage.at<uchar>(i, j) > threshold ? 255 : 0;
+		}
+	}
+
+	return cvMat2QImage(dstImage);
+}
+
+QImage CVHelper::OstusThresholding(const QImage& image, int& threshold)
+{
+	Mat srcImage = toGrayMat(image);
+
+	//计算图像直方图数组
+	const int grayscale = 256;//直方图等级
+	float ranges[] = { 0,256 };//灰度级范围
+	const float* histRanges = { ranges };
+	Mat HistNum;//容纳直方图数组
+	calcHist(&srcImage, 1, 0, Mat(), HistNum, 1, &grayscale, &histRanges, true, false);//计算直方图
+
+	double P[grayscale] = { 0 };
+	double PK[grayscale] = { 0 };
+	double MK[grayscale] = { 0 };
+	double srcpixnum = srcImage.rows * srcImage.cols, sumtmpPK = 0, sumtmpMK = 0;
+	for (int i = 0; i < grayscale; ++i) {
+		P[i] = HistNum.at<float>(i) / srcpixnum;   //每个灰度级出现的概率
+		PK[i] = sumtmpPK + P[i];         //概率累计和 
+		sumtmpPK = PK[i];
+		MK[i] = sumtmpMK + i * P[i];       //灰度级的累加均值                                                                                                                                                                                                                                                                                                                                                                                                        
+		sumtmpMK = MK[i];
+	}
+
+	//计算类间方差
+	double temp = 0;
+	for (int k = 0; k < grayscale; ++k) {
+		if ((MK[grayscale - 1] * PK[k] - MK[k]) * (MK[grayscale - 1] * PK[k] - MK[k]) / (PK[k] * (1 - PK[k])) > temp) {
+			temp = (MK[grayscale - 1] * PK[k] - MK[k]) * (MK[grayscale - 1] * PK[k] - MK[k]) / (PK[k] * (1 - PK[k]));
+			threshold = k;
+		}
+	}
+
+	Mat dstImage;
+	dstImage.create(srcImage.rows, srcImage.cols, CV_8UC1);
+
+	for (int i = 0; i < srcImage.rows; ++i) {
+		for (int j = 0; j < srcImage.cols; ++j) {
+			dstImage.at<uchar>(i, j) = srcImage.at<uchar>(i, j) > threshold ? 255 : 0;
+		}
+	}
+
+	return cvMat2QImage(dstImage);
+}
+
 /// @brief 利用OpenCV的函数进行傅里叶变换
 /// @param image QImage图像
 /// @return 傅里叶变换后的QImage图像

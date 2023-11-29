@@ -35,6 +35,8 @@ DigitallmageProcessing::DigitallmageProcessing(QWidget* parent)
 	//状态栏显示路径
 	this->labelPath = new QLabel("图片路径", this);
 	statusBar()->addWidget(this->labelPath);
+	this->labelVar = new QLabel(" ", this);
+	statusBar()->addPermanentWidget(this->labelVar);
 
 	//// 创建一个512x512的灰度图像
 	//cv::Mat image(512, 512, CV_8UC1, cv::Scalar(1));
@@ -63,6 +65,7 @@ void DigitallmageProcessing::on_actionOpenFile_triggered() {
 	}
 	//状态栏显示路径
 	labelPath->setText(path);
+	labelVar->setText(" ");
 	//清除原有图像
 	originalImageLabel->clear();
 	processingImageLabel->clear();
@@ -133,6 +136,7 @@ void DigitallmageProcessing::cleanLabelImage() {
 	processingImageLabel->clear();
 	processedImageLabel->clear();
 	hasProcessedImage = false;
+	labelVar->setText(" ");
 }
 
 /// @brief 清空图像
@@ -543,12 +547,40 @@ void DigitallmageProcessing::on_actionClosing_triggered()
 
 void DigitallmageProcessing::on_actionGlobalThresholding_triggered()
 {
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+	int ans = -1;
+	//获取参数
+	int defaultTh = -1;
+	NumericSelection* numericSelection = new NumericSelection("初始阈值");
+	numericSelection->setMaximum(255);
+	numericSelection->setMinimum(-1);
+	numericSelection->setValue(-1);
+	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {defaultTh = v; });
+	numericSelection->exec();
 
+	processedImage.setImage(CVHelper::GlobalThresholding(originalImage.getQImage(), ans, defaultTh));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
+	labelVar->setText("阈值：" + QString::number(ans));
 }
 
 
 void DigitallmageProcessing::on_actionOstusThresholding_triggered()
 {
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+	int ans = -1;
 
+	processedImage.setImage(CVHelper::OstusThresholding(originalImage.getQImage(), ans));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
+	labelVar->setText("阈值：" + QString::number(ans));
 }
 

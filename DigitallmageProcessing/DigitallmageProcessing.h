@@ -75,6 +75,7 @@ private:
     Ui::DigitallmageProcessingClass ui;///< UI
 
     QLabel* labelPath;///< 文件路径标签
+    QLabel* labelVar;
 
     QLabel* originalImageLabel;///< 原始图像展示标签
     QLabel* processingImageLabel;///< 处理中图像展示标签(选用)
