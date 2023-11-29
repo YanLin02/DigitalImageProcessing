@@ -57,6 +57,14 @@ public:
 
 	static bool saveAsJPEG2000(const QImage& image, const QString& fileName, int quality = 100);
 
+	static QImage Erosion(const QImage& image);
+
+	static QImage Dilation(const QImage& image);
+
+	static QImage GlobalThresholding(const QImage& image, int& threshold, int defth = -1);
+
+	static QImage OstusThresholding(const QImage& image, int& threshold);
+
 	/// @brief 将Mat转换为QImage
 	/// @param mat BGR的Mat
 	/// @return RGB888格式的QImage

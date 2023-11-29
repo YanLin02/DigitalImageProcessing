@@ -487,36 +487,68 @@ void DigitallmageProcessing::on_actionjpeg2000_triggered()
 
 void DigitallmageProcessing::on_actionErosion_triggered()
 {
-    
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	processedImage.setImage(CVHelper::Erosion(originalImage.getQImage()));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 
 void DigitallmageProcessing::on_actionDilation_triggered()
 {
-    
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	processedImage.setImage(CVHelper::Dilation(originalImage.getQImage()));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 
 void DigitallmageProcessing::on_actionOpening_triggered()
 {
-    
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	processedImage.setImage(CVHelper::Dilation(CVHelper::Erosion(originalImage.getQImage())));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 
 void DigitallmageProcessing::on_actionClosing_triggered()
 {
-    
+	if (!hasImage) {
+		QMessageBox::warning(this, "警告", "未导入图片");
+		return;
+	}
+
+	processedImage.setImage(CVHelper::Erosion(CVHelper::Dilation(originalImage.getQImage())));
+	processedImage.displayImage(processedImageLabel);
+
+	hasProcessedImage = true;//有处理后图像
 }
 
 
 void DigitallmageProcessing::on_actionGlobalThresholding_triggered()
 {
-    
+
 }
 
 
 void DigitallmageProcessing::on_actionOstusThresholding_triggered()
 {
-    
+
 }
 

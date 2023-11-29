@@ -206,6 +206,56 @@ bool CVHelper::saveAsJPEG2000(const QImage& image, const QString& fileName, int 
 	return imwrite(fileName.toStdString(), srcImage, compression_params);
 }
 
+QImage CVHelper::Erosion(const QImage& image)
+{
+	Mat srcImage = toGrayMat(image);
+	Mat dstImage;
+	dstImage.create(srcImage.rows, srcImage.cols, CV_8UC1);
+
+	//腐蚀操作
+	for (int i = 0; i < srcImage.rows; ++i) {
+		for (int j = 0; j < srcImage.cols; ++j) {
+			uchar minV = 255;
+
+			//遍历周围最小像素值
+			for (int a = i - 1; a <= i + 1; a++) {
+				for (int b = j - 1; b <= j + 1; b++) {
+					if (b < 0 || b >= srcImage.cols || a < 0 || a >= srcImage.rows)
+						continue;
+					minV = (std::min<uchar>)(minV, srcImage.at<uchar>(a, b));
+				}
+			}
+			dstImage.at<uchar>(i, j) = minV;
+		}
+	}
+	return cvMat2QImage(dstImage);
+}
+
+QImage CVHelper::Dilation(const QImage& image)
+{
+	Mat srcImage = toGrayMat(image);
+	Mat dstImage;
+	dstImage.create(srcImage.rows, srcImage.cols, CV_8UC1);
+
+	//腐蚀操作
+	for (int i = 0; i < srcImage.rows; ++i) {
+		for (int j = 0; j < srcImage.cols; ++j) {
+			uchar maxV = 0;
+
+			//遍历周围最大像素值
+			for (int a = i - 1; a <= i + 1; a++) {
+				for (int b = j - 1; b <= j + 1; b++) {
+					if (b < 0 || b >= srcImage.cols || a < 0 || a >= srcImage.rows)
+						continue;
+					maxV = (std::max<uchar>)(maxV, srcImage.at<uchar>(a, b));
+				}
+			}
+			dstImage.at<uchar>(i, j) = maxV;
+		}
+	}
+	return cvMat2QImage(dstImage);
+}
+
 /// @brief 利用OpenCV的函数进行傅里叶变换
 /// @param image QImage图像
 /// @return 傅里叶变换后的QImage图像
