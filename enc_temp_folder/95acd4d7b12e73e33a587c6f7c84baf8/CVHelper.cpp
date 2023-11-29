@@ -206,9 +206,6 @@ bool CVHelper::saveAsJPEG2000(const QImage& image, const QString& fileName, int 
 	return imwrite(fileName.toStdString(), srcImage, compression_params);
 }
 
-/// @brief 腐蚀操作
-/// @param image 原图像
-/// @return 腐蚀后的图像
 QImage CVHelper::Erosion(const QImage& image)
 {
 	Mat srcImage = toGrayMat(image);
@@ -234,9 +231,6 @@ QImage CVHelper::Erosion(const QImage& image)
 	return cvMat2QImage(dstImage);
 }
 
-/// @brief 膨胀操作
-/// @param image 原图像
-/// @return 膨胀后的图像
 QImage CVHelper::Dilation(const QImage& image)
 {
 	Mat srcImage = toGrayMat(image);
@@ -262,11 +256,6 @@ QImage CVHelper::Dilation(const QImage& image)
 	return cvMat2QImage(dstImage);
 }
 
-/// @brief 全局阈值图像分割
-/// @param image 原图像
-/// @param threshold 返回的阈值
-/// @param defth 初始阈值，默认为-1，表示使用图像均值作为初始阈值
-/// @return 阈值化的图像
 QImage CVHelper::GlobalThresholding(const QImage& image, int& threshold, int defth)
 {
 	const int delta = 0;
@@ -316,10 +305,6 @@ QImage CVHelper::GlobalThresholding(const QImage& image, int& threshold, int def
 	return cvMat2QImage(dstImage);
 }
 
-/// @brief Ostu算法图像分割
-/// @param image 原图像
-/// @param threshold 返回的阈值
-/// @return 阈值化的图像
 QImage CVHelper::OstusThresholding(const QImage& image, int& threshold)
 {
 	Mat srcImage = toGrayMat(image);

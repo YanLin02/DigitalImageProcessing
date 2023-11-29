@@ -561,11 +561,20 @@ void DigitallmageProcessing::on_actionGlobalThresholding_triggered()
 	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {defaultTh = v; });
 	numericSelection->exec();
 
-	processedImage.setImage(CVHelper::GlobalThresholding(originalImage.getQImage(), ans, defaultTh));
+	QImage temp;
+	double timer = (double)cv::getTickCount();
+	temp = CVHelper::GlobalThresholding(originalImage.getQImage(), ans, defaultTh);
+	timer = (double)cv::getTickCount() - timer;
+	processedImage.setImage(temp);
 	processedImage.displayImage(processedImageLabel);
+	labelVar->setText("阈值：" + QString::number(ans) + "  时间：" + QString::number(timer * 1000. / cv::getTickFrequency()) + "ms");
+
+
+	//processedImage.setImage(CVHelper::GlobalThresholding(originalImage.getQImage(), ans, defaultTh));
+	//processedImage.displayImage(processedImageLabel);
+	//labelVar->setText("阈值：" + QString::number(ans));
 
 	hasProcessedImage = true;//有处理后图像
-	labelVar->setText("阈值：" + QString::number(ans));
 }
 
 
@@ -577,10 +586,18 @@ void DigitallmageProcessing::on_actionOstusThresholding_triggered()
 	}
 	int ans = -1;
 
-	processedImage.setImage(CVHelper::OstusThresholding(originalImage.getQImage(), ans));
+	QImage temp;
+	double timer = (double)cv::getTickCount();
+	temp = CVHelper::OstusThresholding(originalImage.getQImage(), ans);
+	timer = (double)cv::getTickCount() - timer;
+	processedImage.setImage(temp);
 	processedImage.displayImage(processedImageLabel);
+	labelVar->setText("阈值：" + QString::number(ans) + "  时间：" + QString::number(timer * 1000. / cv::getTickFrequency()) + "ms");
+
+	//processedImage.setImage(CVHelper::OstusThresholding(originalImage.getQImage(), ans));
+	//processedImage.displayImage(processedImageLabel);
+	//labelVar->setText("阈值：" + QString::number(ans));
 
 	hasProcessedImage = true;//有处理后图像
-	labelVar->setText("阈值：" + QString::number(ans));
 }
 
