@@ -86,38 +86,6 @@ void DigitallmageProcessing::on_actionGray_triggered() {
 	hasProcessedImage = true;//有处理后图像
 }
 
-/// @brief 平移
-void DigitallmageProcessing::on_actionTranslation_triggered() {
-	if (!hasImage) {//没有导入图片无效
-		QMessageBox::warning(this, "警告", "未导入图片");
-		return;
-	}
-}
-
-/// @brief 旋转
-void DigitallmageProcessing::on_actionRotate_triggered() {
-	if (!hasImage) {//没有导入图片无效
-		QMessageBox::warning(this, "警告", "未导入图片");
-		return;
-	}
-}
-
-/// @brief 缩放
-void DigitallmageProcessing::on_actionScale_triggered() {
-	if (!hasImage) {//没有导入图片无效
-		QMessageBox::warning(this, "警告", "未导入图片");
-		return;
-	}
-
-	//获取倍率
-	int vlaue = 100;
-	NumericSelection* numericSelection = new NumericSelection("缩放倍率");
-	connect(numericSelection, &NumericSelection::offerValue, this, [&](int v) {vlaue = v; });
-	numericSelection->exec();
-
-
-}
-
 /// @brief 傅里叶变换
 void DigitallmageProcessing::on_actionFourier_triggered() {
 	if (!hasImage) {//没有导入图片无效
@@ -514,5 +482,41 @@ void DigitallmageProcessing::on_actionjpeg2000_triggered()
 		QMessageBox::warning(this, "警告", "保存文件失败(检查中文路径)");
 		return;
 	}
+}
+
+
+void DigitallmageProcessing::on_actionErosion_triggered()
+{
+    
+}
+
+
+void DigitallmageProcessing::on_actionDilation_triggered()
+{
+    
+}
+
+
+void DigitallmageProcessing::on_actionOpening_triggered()
+{
+    
+}
+
+
+void DigitallmageProcessing::on_actionClosing_triggered()
+{
+    
+}
+
+
+void DigitallmageProcessing::on_actionGlobalThresholding_triggered()
+{
+    
+}
+
+
+void DigitallmageProcessing::on_actionOstusThresholding_triggered()
+{
+    
 }
 

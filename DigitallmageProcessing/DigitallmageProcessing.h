@@ -20,12 +20,6 @@ private slots:
     void on_actionOpenFile_triggered();
     /// @brief 灰度化
     void on_actionGray_triggered();
-    /// @brief 平移
-    void on_actionTranslation_triggered();
-    /// @brief 旋转
-    void on_actionRotate_triggered();
-    /// @brief 缩放
-    void on_actionScale_triggered();
     /// @brief 傅里叶变换
     void on_actionFourier_triggered();
     /// @brief 直方图
@@ -64,6 +58,18 @@ private slots:
     void on_actionjpeg_triggered();
     
     void on_actionjpeg2000_triggered();
+    
+    void on_actionErosion_triggered();
+    
+    void on_actionDilation_triggered();
+    
+    void on_actionOpening_triggered();
+    
+    void on_actionClosing_triggered();
+    
+    void on_actionGlobalThresholding_triggered();
+    
+    void on_actionOstusThresholding_triggered();
     
 private:
     Ui::DigitallmageProcessingClass ui;///< UI
